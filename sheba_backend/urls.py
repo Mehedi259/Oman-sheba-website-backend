@@ -61,6 +61,7 @@ schema_view = get_schema_view(
 
 urlpatterns = [
     path('', api_root, name='api-root'),
+    path('grappelli/', include('grappelli.urls')),  # Grappelli URLS
     path('admin/', admin.site.urls),
     
     # API Documentation

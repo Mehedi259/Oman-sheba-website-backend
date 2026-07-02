@@ -1,0 +1,302 @@
+/* Sheba Modern Admin Theme - Custom CSS */
+
+/* Modern shadows and rounded corners */
+#header {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+/* Sidebar modernization */
+#content-main {
+    border-radius: 8px;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+}
+
+/* Modern cards for dashboard */
+.module {
+    border-radius: 8px !important;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1) !important;
+    border: none !important;
+    transition: all 0.3s ease;
+}
+
+.module:hover {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
+    transform: translateY(-2px);
+}
+
+/* Modern buttons */
+.submit-row input[type="submit"],
+.button,
+input[type="submit"],
+input[type="button"],
+.submit-row a {
+    border-radius: 6px !important;
+    padding: 10px 20px !important;
+    font-weight: 500 !important;
+    border: none !important;
+    transition: all 0.2s ease !important;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05) !important;
+}
+
+.submit-row input[type="submit"]:hover,
+.button:hover,
+input[type="submit"]:hover {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
+    transform: translateY(-1px);
+}
+
+/* Modern form fields */
+input[type="text"],
+input[type="password"],
+input[type="email"],
+input[type="url"],
+input[type="number"],
+textarea,
+select {
+    border-radius: 6px !important;
+    border: 1px solid #D1D5DB !important;
+    padding: 8px 12px !important;
+    transition: all 0.2s ease !important;
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus,
+input[type="email"]:focus,
+input[type="url"]:focus,
+input[type="number"]:focus,
+textarea:focus,
+select:focus {
+    border-color: #3B82F6 !important;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
+    outline: none !important;
+}
+
+/* Modern table styling */
+#result_list {
+    border-radius: 8px !important;
+    overflow: hidden !important;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1) !important;
+}
+
+#result_list th {
+    background: linear-gradient(to bottom, #F9FAFB, #F3F4F6) !important;
+    border-bottom: 2px solid #E5E7EB !important;
+    font-weight: 600 !important;
+    text-transform: uppercase !important;
+    font-size: 11px !important;
+    letter-spacing: 0.5px !important;
+    padding: 12px 10px !important;
+}
+
+#result_list tr {
+    transition: background-color 0.2s ease !important;
+}
+
+#result_list tr:hover {
+    background-color: #F9FAFB !important;
+}
+
+/* Modern breadcrumbs */
+.breadcrumbs {
+    border-radius: 6px !important;
+    padding: 12px 20px !important;
+    background: linear-gradient(to right, #F9FAFB, #FFFFFF) !important;
+    border: 1px solid #E5E7EB !important;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05) !important;
+}
+
+/* Modern pagination */
+.pagination {
+    border-radius: 6px !important;
+    overflow: hidden !important;
+}
+
+.pagination a,
+.pagination span {
+    border-radius: 4px !important;
+    margin: 0 2px !important;
+    transition: all 0.2s ease !important;
+}
+
+.pagination a:hover {
+    background-color: #EFF6FF !important;
+    color: #2563EB !important;
+}
+
+/* Modern fieldsets */
+.module fieldset {
+    border-radius: 8px !important;
+    border: 1px solid #E5E7EB !important;
+    margin-bottom: 20px !important;
+}
+
+.module h2 {
+    background: linear-gradient(to right, #F9FAFB, #FFFFFF) !important;
+    border-radius: 8px 8px 0 0 !important;
+    padding: 12px 15px !important;
+    font-weight: 600 !important;
+    border-bottom: 2px solid #3B82F6 !important;
+}
+
+/* Modern dashboard icons */
+.app-classifieds .addlink,
+.app-users .addlink,
+.app-emergency .addlink,
+.app-news .addlink,
+.app-community .addlink {
+    font-weight: 500 !important;
+}
+
+/* Modern change list filters */
+#changelist-filter {
+    border-radius: 8px !important;
+    background-color: #F9FAFB !important;
+    border: 1px solid #E5E7EB !important;
+    padding: 15px !important;
+}
+
+#changelist-filter h2 {
+    font-weight: 600 !important;
+    color: #1F2937 !important;
+    border-bottom: 2px solid #3B82F6 !important;
+    padding-bottom: 8px !important;
+    margin-bottom: 12px !important;
+}
+
+/* Modern search bar */
+#changelist-search {
+    border-radius: 8px !important;
+    background-color: #FFFFFF !important;
+    border: 1px solid #E5E7EB !important;
+    padding: 15px !important;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1) !important;
+}
+
+#searchbar {
+    border-radius: 6px !important;
+    border: 1px solid #D1D5DB !important;
+    padding: 10px 15px !important;
+    width: 100% !important;
+    max-width: 400px !important;
+}
+
+/* Modern action bar */
+.actions {
+    border-radius: 8px !important;
+    background-color: #F9FAFB !important;
+    border: 1px solid #E5E7EB !important;
+    padding: 15px !important;
+    margin-bottom: 20px !important;
+}
+
+/* Smooth transitions */
+* {
+    transition-property: background-color, border-color, color, fill, stroke, opacity, box-shadow, transform;
+    transition-duration: 200ms;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Modern alerts */
+.messagelist li {
+    border-radius: 6px !important;
+    padding: 12px 20px !important;
+    margin-bottom: 10px !important;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1) !important;
+}
+
+.messagelist .success {
+    background-color: #D1FAE5 !important;
+    border-left: 4px solid #10B981 !important;
+    color: #065F46 !important;
+}
+
+.messagelist .warning {
+    background-color: #FEF3C7 !important;
+    border-left: 4px solid #F59E0B !important;
+    color: #92400E !important;
+}
+
+.messagelist .error {
+    background-color: #FEE2E2 !important;
+    border-left: 4px solid #EF4444 !important;
+    color: #991B1B !important;
+}
+
+/* Responsive improvements */
+@media (max-width: 768px) {
+    .module {
+        margin: 10px !important;
+    }
+    
+    #changelist-filter {
+        margin-top: 20px !important;
+    }
+}
+
+/* Modern loading indicator */
+.loading {
+    border-radius: 50% !important;
+}
+
+/* Better focus states */
+a:focus,
+button:focus,
+input:focus,
+select:focus,
+textarea:focus {
+    outline: 2px solid #3B82F6 !important;
+    outline-offset: 2px !important;
+}
+
+/* Modern tabs */
+.tab {
+    border-radius: 6px 6px 0 0 !important;
+    transition: all 0.2s ease !important;
+}
+
+.tab:hover {
+    background-color: #EFF6FF !important;
+}
+
+.tab.selected {
+    border-bottom: 3px solid #3B82F6 !important;
+    font-weight: 600 !important;
+}
+
+/* Smooth scroll */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Modern inline forms */
+.inline-group {
+    border-radius: 8px !important;
+    border: 1px solid #E5E7EB !important;
+    overflow: hidden !important;
+}
+
+.inline-related {
+    border-radius: 6px !important;
+    margin-bottom: 15px !important;
+}
+
+/* Better contrast for dark text */
+.quiet {
+    color: #6B7280 !important;
+}
+
+/* Modern help text */
+.help {
+    color: #6B7280 !important;
+    font-size: 0.875rem !important;
+    font-style: italic !important;
+}
+
+/* Clean object tools */
+.object-tools {
+    border-radius: 6px !important;
+}
+
+.object-tools li {
+    border-radius: 6px !important;
+}

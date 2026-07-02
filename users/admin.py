@@ -9,6 +9,11 @@ class UserAdmin(BaseUserAdmin):
     fieldsets = BaseUserAdmin.fieldsets + (
         ('Additional Info', {'fields': ('phone_number', 'profile_picture', 'bio', 'location')}),
     )
+    
+    class Media:
+        css = {
+            'all': ('admin/css/custom_admin.css',)
+        }
 
 
 @admin.register(Favorite)
@@ -16,3 +21,8 @@ class FavoriteAdmin(admin.ModelAdmin):
     list_display = ['user', 'content_type', 'content_id', 'created_at']
     list_filter = ['content_type', 'created_at']
     search_fields = ['user__username']
+    
+    class Media:
+        css = {
+            'all': ('admin/css/custom_admin.css',)
+        }
