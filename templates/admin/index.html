@@ -55,10 +55,15 @@
         position: relative;
         overflow: hidden;
         min-height: 120px;
+        text-decoration: none;
+        display: block;
+        cursor: pointer;
     }
     
     .stat-card:hover {
         transform: translateY(-3px);
+        text-decoration: none;
+        color: white;
     }
     
     .stat-card.gradient-orange {
@@ -289,33 +294,33 @@
 <div class="custom-dashboard">
     <!-- Stats Cards -->
     <div class="stats-container">
-        <div class="stat-card gradient-orange">
+        <a href="{% url 'admin:classifieds_job_changelist' %}" class="stat-card gradient-orange">
             <span class="icon">💼</span>
             <h3>Classifieds</h3>
             <div class="value">{{ total_classifieds|default:"0" }}</div>
             <div class="trend">Total listings</div>
-        </div>
+        </a>
         
-        <div class="stat-card gradient-blue">
+        <a href="{% url 'admin:news_news_changelist' %}" class="stat-card gradient-blue">
             <span class="icon">📰</span>
             <h3>News</h3>
             <div class="value">{{ news_count|default:"0" }}</div>
             <div class="trend">Articles</div>
-        </div>
+        </a>
         
-        <div class="stat-card gradient-green">
+        <a href="{% url 'admin:community_post_changelist' %}" class="stat-card gradient-green">
             <span class="icon">💬</span>
             <h3>Posts</h3>
             <div class="value">{{ post_count|default:"0" }}</div>
             <div class="trend">Community</div>
-        </div>
+        </a>
         
-        <div class="stat-card gradient-purple">
+        <a href="{% url 'admin:users_user_changelist' %}" class="stat-card gradient-purple">
             <span class="icon">👥</span>
             <h3>Users</h3>
             <div class="value">{{ user_count|default:"0" }}</div>
             <div class="trend">Registered</div>
-        </div>
+        </a>
     </div>
 
     <!-- Charts Row -->
