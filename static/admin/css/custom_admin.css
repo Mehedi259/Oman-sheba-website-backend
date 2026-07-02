@@ -1,5 +1,64 @@
 /* Sheba Modern Admin Theme - Custom CSS */
 
+/* Remove ALL diagonal stripe patterns - Force clean backgrounds */
+* {
+    background-image: none !important;
+}
+
+body {
+    background: #f5f7fa !important;
+}
+
+/* Grappelli content areas */
+#grp-content,
+#grp-content-inner,
+#grp-context-navigation {
+    background: #f5f7fa !important;
+    background-image: none !important;
+}
+
+/* Main content area and changelist */
+#content,
+#content-main,
+#content-inner,
+.change-list,
+#changelist,
+.grp-module {
+    background: #FFFFFF !important;
+    background-image: none !important;
+}
+
+/* Table and all its parts */
+#result_list,
+#result_list table,
+#result_list thead,
+#result_list tbody,
+#result_list tr,
+#result_list td,
+#result_list th,
+table,
+thead,
+tbody,
+tr,
+td,
+th {
+    background-image: none !important;
+}
+
+/* Clean white for table cells */
+#result_list tbody tr td {
+    background: #FFFFFF !important;
+}
+
+/* Alternate row colors */
+#result_list tbody tr:nth-child(even) td {
+    background-color: #F9FAFB !important;
+}
+
+#result_list tbody tr:nth-child(odd) td {
+    background-color: #FFFFFF !important;
+}
+
 /* Modern shadows and rounded corners */
 #header {
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
