@@ -1,0 +1,104 @@
+from rest_framework import generics, filters
+from django_filters.rest_framework import DjangoFilterBackend
+from .models import Job, Property, Vehicle, Service
+from .serializers import JobSerializer, PropertySerializer, VehicleSerializer, ServiceSerializer
+
+
+class JobListCreateView(generics.ListCreateAPIView):
+    """List all jobs or create new job"""
+    queryset = Job.objects.filter(status='active')
+    serializer_class = JobSerializer
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    filterset_fields = ['job_type', 'category', 'location']
+    search_fields = ['title', 'description', 'company_name']
+    ordering_fields = ['created_at', 'price', 'views']
+    
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+
+class JobDetailView(generics.RetrieveUpdateDestroyAPIView):
+    """Retrieve, update or delete a job"""
+    queryset = Job.objects.all()
+    serializer_class = JobSerializer
+    
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        instance.views += 1
+        instance.save(update_fields=['views'])
+        return super().retrieve(request, *args, **kwargs)
+
+
+class PropertyListCreateView(generics.ListCreateAPIView):
+    """List all properties or create new property"""
+    queryset = Property.objects.filter(status='active')
+    serializer_class = PropertySerializer
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    filterset_fields = ['property_type', 'listing_type', 'location', 'bedrooms']
+    search_fields = ['title', 'description', 'location']
+    ordering_fields = ['created_at', 'price', 'views']
+    
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+
+class PropertyDetailView(generics.RetrieveUpdateDestroyAPIView):
+    """Retrieve, update or delete a property"""
+    queryset = Property.objects.all()
+    serializer_class = PropertySerializer
+    
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        instance.views += 1
+        instance.save(update_fields=['views'])
+        return super().retrieve(request, *args, **kwargs)
+
+
+class VehicleListCreateView(generics.ListCreateAPIView):
+    """List all vehicles or create new vehicle"""
+    queryset = Vehicle.objects.filter(status='active')
+    serializer_class = VehicleSerializer
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    filterset_fields = ['brand', 'condition', 'location', 'year']
+    search_fields = ['title', 'description', 'brand', 'model']
+    ordering_fields = ['created_at', 'price', 'views', 'year']
+    
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+
+class VehicleDetailView(generics.RetrieveUpdateDestroyAPIView):
+    """Retrieve, update or delete a vehicle"""
+    queryset = Vehicle.objects.all()
+    serializer_class = VehicleSerializer
+    
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        instance.views += 1
+        instance.save(update_fields=['views'])
+        return super().retrieve(request, *args, **kwargs)
+
+
+class ServiceListCreateView(generics.ListCreateAPIView):
+    """List all services or create new service"""
+    queryset = Service.objects.filter(status='active')
+    serializer_class = ServiceSerializer
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    filterset_fields = ['category', 'location']
+    search_fields = ['title', 'description', 'category', 'service_type']
+    ordering_fields = ['created_at', 'price', 'views']
+    
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+
+class ServiceDetailView(generics.RetrieveUpdateDestroyAPIView):
+    """Retrieve, update or delete a service"""
+    queryset = Service.objects.all()
+    serializer_class = ServiceSerializer
+    
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        instance.views += 1
+        instance.save(update_fields=['views'])
+        return super().retrieve(request, *args, **kwargs)
