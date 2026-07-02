@@ -1,0 +1,490 @@
+{% extends "admin/base_site.html" %}
+{% load i18n static %}
+
+{% block extrastyle %}
+{{ block.super }}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+<style>
+    /* Modern Dashboard Styles */
+    body {
+        background: #f5f7fa !important;
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+    }
+    
+    #grp-content {
+        background: #f5f7fa !important;
+    }
+    
+    #content-inner {
+        background: transparent !important;
+        padding: 20px !important;
+    }
+    
+    /* Dashboard Title */
+    .dashboard #content-inner > h1 {
+        font-size: 24px !important;
+        font-weight: 700 !important;
+        margin-bottom: 25px !important;
+        color: #2d3748 !important;
+    }
+    
+    /* Custom Dashboard Container */
+    .custom-dashboard {
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+    
+    /* Stats Cards - Compact Version */
+    .stats-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 15px;
+        margin-bottom: 25px;
+    }
+    
+    .stat-card {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 12px;
+        padding: 20px;
+        color: white;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        transition: transform 0.2s ease;
+        position: relative;
+        overflow: hidden;
+        min-height: 120px;
+    }
+    
+    .stat-card:hover {
+        transform: translateY(-3px);
+    }
+    
+    .stat-card.gradient-orange {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    }
+    
+    .stat-card.gradient-blue {
+        background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    }
+    
+    .stat-card.gradient-green {
+        background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+    }
+    
+    .stat-card.gradient-purple {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+    
+    .stat-card h3 {
+        font-size: 12px;
+        font-weight: 500;
+        opacity: 0.9;
+        margin: 0 0 8px 0;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    
+    .stat-card .value {
+        font-size: 28px;
+        font-weight: 700;
+        margin: 5px 0;
+    }
+    
+    .stat-card .trend {
+        font-size: 11px;
+        opacity: 0.85;
+    }
+    
+    .stat-card .icon {
+        position: absolute;
+        top: 15px;
+        right: 20px;
+        font-size: 32px;
+        opacity: 0.3;
+    }
+    
+    /* Charts Section - Side by Side */
+    .charts-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        margin-bottom: 25px;
+    }
+    
+    .chart-card {
+        background: white;
+        border-radius: 12px;
+        padding: 20px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+    
+    .chart-card h2 {
+        font-size: 16px;
+        font-weight: 600;
+        margin: 0 0 15px 0;
+        color: #2d3748;
+    }
+    
+    .chart-card canvas {
+        max-height: 250px !important;
+    }
+    
+    /* Quick Actions - Horizontal */
+    .quick-actions-section {
+        margin-bottom: 25px;
+    }
+    
+    .quick-actions-section h2 {
+        font-size: 16px;
+        font-weight: 600;
+        margin: 0 0 15px 0;
+        color: #2d3748;
+    }
+    
+    .quick-actions {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 12px;
+    }
+    
+    .action-btn {
+        background: white;
+        border-radius: 10px;
+        padding: 15px;
+        text-align: center;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        transition: all 0.2s ease;
+        text-decoration: none;
+        color: #2d3748;
+        display: block;
+    }
+    
+    .action-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        color: #667eea;
+        text-decoration: none;
+    }
+    
+    .action-btn .icon {
+        font-size: 24px;
+        margin-bottom: 8px;
+        display: block;
+    }
+    
+    .action-btn .label {
+        font-weight: 500;
+        font-size: 13px;
+    }
+    
+    /* Recent Activity - Compact */
+    .activity-section {
+        background: white;
+        border-radius: 12px;
+        padding: 20px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        margin-bottom: 25px;
+    }
+    
+    .activity-section h2 {
+        font-size: 16px;
+        font-weight: 600;
+        margin: 0 0 15px 0;
+        color: #2d3748;
+    }
+    
+    .activity-list {
+        max-height: 300px;
+        overflow-y: auto;
+    }
+    
+    .activity-item {
+        padding: 12px 0;
+        border-bottom: 1px solid #e2e8f0;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+    
+    .activity-item:last-child {
+        border-bottom: none;
+    }
+    
+    .activity-icon {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #edf2f7;
+        font-size: 14px;
+        flex-shrink: 0;
+    }
+    
+    .activity-content {
+        flex: 1;
+        min-width: 0;
+    }
+    
+    .activity-title {
+        font-weight: 500;
+        color: #2d3748;
+        margin-bottom: 3px;
+        font-size: 13px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    
+    .activity-time {
+        font-size: 11px;
+        color: #a0aec0;
+    }
+    
+    .empty-state {
+        text-align: center;
+        padding: 30px;
+        color: #a0aec0;
+    }
+    
+    .empty-state .empty-icon {
+        font-size: 36px;
+        margin-bottom: 10px;
+    }
+    
+    /* Responsive */
+    @media (max-width: 1024px) {
+        .charts-row {
+            grid-template-columns: 1fr;
+        }
+    }
+    
+    @media (max-width: 768px) {
+        .stats-container {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        
+        #content-inner {
+            padding: 15px !important;
+        }
+        
+        .stat-card {
+            min-height: 100px;
+            padding: 15px;
+        }
+        
+        .stat-card .value {
+            font-size: 24px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block bodyclass %}{{ block.super }} dashboard{% endblock %}
+
+{% block content %}
+<div class="custom-dashboard">
+    <!-- Stats Cards -->
+    <div class="stats-container">
+        <div class="stat-card gradient-orange">
+            <span class="icon">💼</span>
+            <h3>Classifieds</h3>
+            <div class="value">{{ total_classifieds|default:"0" }}</div>
+            <div class="trend">Total listings</div>
+        </div>
+        
+        <div class="stat-card gradient-blue">
+            <span class="icon">📰</span>
+            <h3>News</h3>
+            <div class="value">{{ news_count|default:"0" }}</div>
+            <div class="trend">Articles</div>
+        </div>
+        
+        <div class="stat-card gradient-green">
+            <span class="icon">💬</span>
+            <h3>Posts</h3>
+            <div class="value">{{ post_count|default:"0" }}</div>
+            <div class="trend">Community</div>
+        </div>
+        
+        <div class="stat-card gradient-purple">
+            <span class="icon">👥</span>
+            <h3>Users</h3>
+            <div class="value">{{ user_count|default:"0" }}</div>
+            <div class="trend">Registered</div>
+        </div>
+    </div>
+
+    <!-- Charts Row -->
+    <div class="charts-row">
+        <div class="chart-card">
+            <h2>📊 Content Overview</h2>
+            <canvas id="contentChart"></canvas>
+        </div>
+        
+        <div class="chart-card">
+            <h2>🥧 Classifieds Breakdown</h2>
+            <canvas id="classifiedsChart"></canvas>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="quick-actions-section">
+        <h2>⚡ Quick Actions</h2>
+        <div class="quick-actions">
+            <a href="{% url 'admin:classifieds_job_add' %}" class="action-btn">
+                <span class="icon">💼</span>
+                <div class="label">Add Job</div>
+            </a>
+            <a href="{% url 'admin:classifieds_property_add' %}" class="action-btn">
+                <span class="icon">🏠</span>
+                <div class="label">Add Property</div>
+            </a>
+            <a href="{% url 'admin:classifieds_vehicle_add' %}" class="action-btn">
+                <span class="icon">🚗</span>
+                <div class="label">Add Vehicle</div>
+            </a>
+            <a href="{% url 'admin:classifieds_service_add' %}" class="action-btn">
+                <span class="icon">🛠️</span>
+                <div class="label">Add Service</div>
+            </a>
+            <a href="{% url 'admin:news_news_add' %}" class="action-btn">
+                <span class="icon">📰</span>
+                <div class="label">Add News</div>
+            </a>
+            <a href="{% url 'admin:community_post_add' %}" class="action-btn">
+                <span class="icon">💬</span>
+                <div class="label">Add Post</div>
+            </a>
+        </div>
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="activity-section">
+        <h2>🕐 Recent Activity</h2>
+        
+        {% if admin_log %}
+        <div class="activity-list">
+            {% for entry in admin_log %}
+            <div class="activity-item">
+                <div class="activity-icon">
+                    {% if entry.is_addition %}✅{% elif entry.is_change %}✏️{% elif entry.is_deletion %}🗑️{% endif %}
+                </div>
+                <div class="activity-content">
+                    <div class="activity-title">
+                        {% if entry.is_addition %}Added{% elif entry.is_change %}Modified{% elif entry.is_deletion %}Deleted{% endif %}
+                        <strong>{{ entry.object_repr|truncatewords:3 }}</strong>
+                        {% if entry.content_type %} - {{ entry.content_type.name|capfirst }}{% endif %}
+                    </div>
+                    <div class="activity-time">{{ entry.action_time|timesince }} ago by {{ entry.user.username }}</div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <div class="empty-icon">📋</div>
+            <div>No recent activity</div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+// Content Overview Chart
+const ctx1 = document.getElementById('contentChart');
+if (ctx1) {
+    new Chart(ctx1, {
+        type: 'bar',
+        data: {
+            labels: ['Jobs', 'Properties', 'Vehicles', 'Services', 'News', 'Posts'],
+            datasets: [{
+                label: 'Count',
+                data: [
+                    {{ job_count|default:0 }},
+                    {{ property_count|default:0 }},
+                    {{ vehicle_count|default:0 }},
+                    {{ service_count|default:0 }},
+                    {{ news_count|default:0 }},
+                    {{ post_count|default:0 }}
+                ],
+                backgroundColor: [
+                    'rgba(102, 126, 234, 0.8)',
+                    'rgba(240, 147, 251, 0.8)',
+                    'rgba(79, 172, 254, 0.8)',
+                    'rgba(67, 233, 123, 0.8)',
+                    'rgba(245, 87, 108, 0.8)',
+                    'rgba(118, 75, 162, 0.8)'
+                ],
+                borderRadius: 6,
+                borderWidth: 0,
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: {
+                legend: {
+                    display: false,
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        precision: 0
+                    }
+                }
+            }
+        }
+    });
+}
+
+// Classifieds Breakdown Chart
+const ctx2 = document.getElementById('classifiedsChart');
+if (ctx2) {
+    const total = {{ job_count|default:0 }} + {{ property_count|default:0 }} + {{ vehicle_count|default:0 }} + {{ service_count|default:0 }};
+    
+    new Chart(ctx2, {
+        type: 'doughnut',
+        data: {
+            labels: ['Jobs', 'Properties', 'Vehicles', 'Services'],
+            datasets: [{
+                data: [
+                    {{ job_count|default:0 }},
+                    {{ property_count|default:0 }},
+                    {{ vehicle_count|default:0 }},
+                    {{ service_count|default:0 }}
+                ],
+                backgroundColor: [
+                    'rgba(102, 126, 234, 0.8)',
+                    'rgba(240, 147, 251, 0.8)',
+                    'rgba(79, 172, 254, 0.8)',
+                    'rgba(67, 233, 123, 0.8)'
+                ],
+                borderWidth: 0,
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'bottom',
+                    labels: {
+                        padding: 10,
+                        font: {
+                            size: 11
+                        }
+                    }
+                }
+            }
+        }
+    });
+}
+</script>
+{% endblock %}
