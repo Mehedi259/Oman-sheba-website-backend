@@ -18,7 +18,8 @@ ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost,127.0.0.1').split(','
 
 # Application definition
 INSTALLED_APPS = [
-    'jazzmin',  # Must be before django.contrib.admin
+    'unfold',  # Must be before django.contrib.admin
+    'unfold.contrib.filters',  # Optional, for advanced filters
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -163,128 +164,155 @@ SWAGGER_SETTINGS = {
 }
 
 
-# Jazzmin Admin Theme Configuration
-JAZZMIN_SETTINGS = {
-    # Site title
-    "site_title": "Sheba Admin",
-    "site_header": "Sheba",
-    "site_brand": "Sheba Community Platform",
-    "site_logo": None,  # Add your logo path here
-    "login_logo": None,
-    "login_logo_dark": None,
-    "site_logo_classes": "img-circle",
-    "site_icon": None,
-    "welcome_sign": "Welcome to Sheba Admin Panel",
-    "copyright": "Sheba Ltd",
+# Django Unfold Admin Theme Configuration
+UNFOLD = {
+    "SITE_TITLE": "Sheba Admin",
+    "SITE_HEADER": "Sheba Community Platform",
+    "SITE_URL": "/",
+    "SITE_ICON": None,  # SVG icon or path to image
     
-    # Search model in admin
-    "search_model": "auth.User",
-    
-    # User menu
-    "user_avatar": None,
-    
-    # Top Menu
-    "topmenu_links": [
-        {"name": "Home", "url": "admin:index", "permissions": ["auth.view_user"]},
-        {"name": "API Docs", "url": "/swagger/", "new_window": True},
-        {"model": "auth.User"},
-        {"app": "classifieds"},
-    ],
-    
-    # UI Customizer
-    "usermenu_links": [
-        {"name": "API Documentation", "url": "/swagger/", "new_window": True},
-        {"model": "auth.user"}
-    ],
-    
-    # Side Menu
-    "show_sidebar": True,
-    "navigation_expanded": True,
-    "hide_apps": [],
-    "hide_models": [],
-    
-    # Ordering
-    "order_with_respect_to": ["auth", "users", "classifieds", "emergency", "news", "community"],
-    
-    # Custom icons for apps and models
-    "icons": {
-        "auth": "fas fa-users-cog",
-        "auth.user": "fas fa-user",
-        "auth.Group": "fas fa-users",
-        
-        "users.User": "fas fa-user-circle",
-        "users.Favorite": "fas fa-heart",
-        
-        "classifieds.Job": "fas fa-briefcase",
-        "classifieds.Property": "fas fa-home",
-        "classifieds.Vehicle": "fas fa-car",
-        "classifieds.Service": "fas fa-tools",
-        "classifieds.ClassifiedImage": "fas fa-image",
-        
-        "emergency.EmergencyService": "fas fa-ambulance",
-        "emergency.EmergencyContact": "fas fa-phone-square",
-        
-        "news.News": "fas fa-newspaper",
-        "news.NewsComment": "fas fa-comments",
-        
-        "community.Post": "fas fa-share-alt",
-        "community.Comment": "fas fa-comment",
-        "community.Like": "fas fa-thumbs-up",
+    "SITE_LOGO": {
+        "light": None,  # Path to light logo
+        "dark": None,   # Path to dark logo
     },
     
-    # Default icons
-    "default_icon_parents": "fas fa-chevron-circle-right",
-    "default_icon_children": "fas fa-circle",
+    "SITE_SYMBOL": "speed",  # Google Material icon name
     
-    # Related modal
-    "related_modal_active": False,
+    "SHOW_HISTORY": True,
+    "SHOW_VIEW_ON_SITE": True,
     
-    # Custom CSS/JS
-    "custom_css": None,
-    "custom_js": None,
-    
-    # Show language chooser
-    "show_ui_builder": False,
-    
-    # Change view
-    "changeform_format": "horizontal_tabs",
-    "changeform_format_overrides": {
-        "auth.user": "collapsible",
-        "auth.group": "vertical_tabs"
+    "COLORS": {
+        "primary": {
+            "50": "255 251 235",
+            "100": "254 243 199",
+            "200": "253 230 138",
+            "300": "252 211 77",
+            "400": "251 191 36",
+            "500": "245 158 11",
+            "600": "217 119 6",
+            "700": "180 83 9",
+            "800": "146 64 14",
+            "900": "120 53 15",
+            "950": "69 26 3",
+        },
     },
     
-    # Theme
-    "theme": "flatly",  # Options: default, cerulean, cosmo, cyborg, darkly, flatly, journal, litera, lumen, lux, materia, minty, pulse, sandstone, simplex, slate, solar, spacelab, superhero, united, yeti
-}
-
-JAZZMIN_UI_TWEAKS = {
-    "navbar_small_text": False,
-    "footer_small_text": False,
-    "body_small_text": False,
-    "brand_small_text": False,
-    "brand_colour": "navbar-primary",
-    "accent": "accent-primary",
-    "navbar": "navbar-white navbar-light",
-    "no_navbar_border": False,
-    "navbar_fixed": False,
-    "layout_boxed": False,
-    "footer_fixed": False,
-    "sidebar_fixed": False,
-    "sidebar": "sidebar-dark-primary",
-    "sidebar_nav_small_text": False,
-    "sidebar_disable_expand": False,
-    "sidebar_nav_child_indent": False,
-    "sidebar_nav_compact_style": False,
-    "sidebar_nav_legacy_style": False,
-    "sidebar_nav_flat_style": False,
-    "theme": "flatly",
-    "dark_mode_theme": None,
-    "button_classes": {
-        "primary": "btn-primary",
-        "secondary": "btn-secondary",
-        "info": "btn-info",
-        "warning": "btn-warning",
-        "danger": "btn-danger",
-        "success": "btn-success"
-    }
+    "EXTENSIONS": {
+        "modeltranslation": {
+            "flags": {
+                "en": "🇬🇧",
+                "bn": "🇧🇩",
+            },
+        },
+    },
+    
+    "SIDEBAR": {
+        "show_search": True,
+        "show_all_applications": True,
+        "navigation": [
+            {
+                "title": "Navigation",
+                "separator": True,
+                "items": [
+                    {
+                        "title": "Dashboard",
+                        "icon": "dashboard",
+                        "link": lambda request: "/admin/",
+                    },
+                ],
+            },
+            {
+                "title": "User Management",
+                "separator": True,
+                "collapsible": True,
+                "items": [
+                    {
+                        "title": "Users",
+                        "icon": "person",
+                        "link": lambda request: "/admin/users/user/",
+                    },
+                    {
+                        "title": "Favorites",
+                        "icon": "favorite",
+                        "link": lambda request: "/admin/users/favorite/",
+                    },
+                ],
+            },
+            {
+                "title": "Classifieds",
+                "separator": True,
+                "collapsible": True,
+                "items": [
+                    {
+                        "title": "Jobs",
+                        "icon": "work",
+                        "link": lambda request: "/admin/classifieds/job/",
+                    },
+                    {
+                        "title": "Properties",
+                        "icon": "home",
+                        "link": lambda request: "/admin/classifieds/property/",
+                    },
+                    {
+                        "title": "Vehicles",
+                        "icon": "directions_car",
+                        "link": lambda request: "/admin/classifieds/vehicle/",
+                    },
+                    {
+                        "title": "Services",
+                        "icon": "build",
+                        "link": lambda request: "/admin/classifieds/service/",
+                    },
+                ],
+            },
+            {
+                "title": "Emergency",
+                "separator": True,
+                "collapsible": True,
+                "items": [
+                    {
+                        "title": "Emergency Services",
+                        "icon": "local_hospital",
+                        "link": lambda request: "/admin/emergency/emergencyservice/",
+                    },
+                    {
+                        "title": "Emergency Contacts",
+                        "icon": "contact_phone",
+                        "link": lambda request: "/admin/emergency/emergencycontact/",
+                    },
+                ],
+            },
+            {
+                "title": "Content",
+                "separator": True,
+                "collapsible": True,
+                "items": [
+                    {
+                        "title": "News",
+                        "icon": "article",
+                        "link": lambda request: "/admin/news/news/",
+                    },
+                    {
+                        "title": "Community Posts",
+                        "icon": "forum",
+                        "link": lambda request: "/admin/community/post/",
+                    },
+                ],
+            },
+            {
+                "title": "Tools",
+                "separator": True,
+                "items": [
+                    {
+                        "title": "API Documentation",
+                        "icon": "api",
+                        "link": lambda request: "/swagger/",
+                        "target": "_blank",
+                    },
+                ],
+            },
+        ],
+    },
+    
+    "TABS": [],
 }
