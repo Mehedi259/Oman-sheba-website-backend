@@ -11,8 +11,8 @@ class JobAdmin(admin.ModelAdmin):
 
 @admin.register(Property)
 class PropertyAdmin(admin.ModelAdmin):
-    list_display = ['title', 'type', 'listing', 'price', 'city', 'status']
-    list_filter = ['type', 'listing', 'status']
+    list_display = ['title', 'type', 'purpose', 'price', 'city', 'status']
+    list_filter = ['type', 'purpose', 'status']
     search_fields = ['title', 'description', 'city']
 
 

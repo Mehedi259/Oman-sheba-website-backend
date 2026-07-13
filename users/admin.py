@@ -18,8 +18,8 @@ class UserAdmin(BaseUserAdmin):
 
 @admin.register(Favorite)
 class FavoriteAdmin(admin.ModelAdmin):
-    list_display = ['user', 'listing_type', 'listing_id', 'created_at']
-    list_filter = ['listing_type', 'created_at']
+    list_display = ['user', 'favorite_type', 'favorite_id', 'created_at']
+    list_filter = ['favorite_type', 'created_at']
     search_fields = ['user__username']
     
     class Media:
