@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'emergency',
     'news',
     'community',
+    'system',  # New system app for advertisements, analytics, settings
 ]
 
 MIDDLEWARE = [
