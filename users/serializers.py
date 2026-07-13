@@ -6,7 +6,7 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['id', 'username', 'email', 'first_name', 'last_name', 
-                  'phone_number', 'profile_picture', 'bio', 'location', 
+                  'phone', 'avatar', 'bio', 'city', 
                   'created_at', 'updated_at']
         read_only_fields = ['id', 'created_at', 'updated_at']
 
@@ -18,7 +18,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['username', 'email', 'password', 'password_confirm', 
-                  'first_name', 'last_name', 'phone_number']
+                  'first_name', 'last_name', 'phone']
     
     def validate(self, data):
         if data['password'] != data['password_confirm']:
@@ -34,5 +34,5 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 class FavoriteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Favorite
-        fields = ['id', 'content_type', 'content_id', 'created_at']
+        fields = ['id', 'favorite_type', 'favorite_id', 'created_at']
         read_only_fields = ['id', 'created_at']

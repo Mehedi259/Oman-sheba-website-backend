@@ -6,11 +6,11 @@ from .serializers import JobSerializer, PropertySerializer, VehicleSerializer, S
 
 class JobListCreateView(generics.ListCreateAPIView):
     """List all jobs or create new job"""
-    queryset = Job.objects.filter(status='active')
+    queryset = Job.objects.filter(status='PUBLISHED')
     serializer_class = JobSerializer
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
-    filterset_fields = ['job_type', 'category', 'location']
-    search_fields = ['title', 'description', 'company_name']
+    filterset_fields = ['type', 'category', 'city']
+    search_fields = ['title', 'description']
     ordering_fields = ['created_at', 'price', 'views']
     
     def perform_create(self, serializer):
@@ -31,11 +31,11 @@ class JobDetailView(generics.RetrieveUpdateDestroyAPIView):
 
 class PropertyListCreateView(generics.ListCreateAPIView):
     """List all properties or create new property"""
-    queryset = Property.objects.filter(status='active')
+    queryset = Property.objects.filter(status='PUBLISHED')
     serializer_class = PropertySerializer
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
-    filterset_fields = ['property_type', 'listing_type', 'location', 'bedrooms']
-    search_fields = ['title', 'description', 'location']
+    filterset_fields = ['type', 'purpose', 'city', 'bedrooms']
+    search_fields = ['title', 'description', 'city']
     ordering_fields = ['created_at', 'price', 'views']
     
     def perform_create(self, serializer):
@@ -56,11 +56,11 @@ class PropertyDetailView(generics.RetrieveUpdateDestroyAPIView):
 
 class VehicleListCreateView(generics.ListCreateAPIView):
     """List all vehicles or create new vehicle"""
-    queryset = Vehicle.objects.filter(status='active')
+    queryset = Vehicle.objects.filter(status='PUBLISHED')
     serializer_class = VehicleSerializer
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
-    filterset_fields = ['brand', 'condition', 'location', 'year']
-    search_fields = ['title', 'description', 'brand', 'model']
+    filterset_fields = ['make', 'condition', 'city', 'year']
+    search_fields = ['title', 'description', 'make', 'model']
     ordering_fields = ['created_at', 'price', 'views', 'year']
     
     def perform_create(self, serializer):
@@ -81,10 +81,10 @@ class VehicleDetailView(generics.RetrieveUpdateDestroyAPIView):
 
 class ServiceListCreateView(generics.ListCreateAPIView):
     """List all services or create new service"""
-    queryset = Service.objects.filter(status='active')
+    queryset = Service.objects.filter(status='PUBLISHED')
     serializer_class = ServiceSerializer
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
-    filterset_fields = ['category', 'location']
+    filterset_fields = ['category', 'city']
     search_fields = ['title', 'description', 'category', 'service_type']
     ordering_fields = ['created_at', 'price', 'views']
     
