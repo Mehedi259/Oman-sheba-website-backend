@@ -1,4 +1,5 @@
 from django.urls import path
+from rest_framework_simplejwt.views import TokenRefreshView
 from . import views
 
 urlpatterns = [
@@ -8,4 +9,11 @@ urlpatterns = [
     path('profile/', views.UserProfileView.as_view(), name='user-profile'),
     path('favorites/', views.FavoriteListCreateView.as_view(), name='favorites-list'),
     path('favorites/<int:pk>/', views.FavoriteDeleteView.as_view(), name='favorite-delete'),
+    
+    # Google OAuth
+    path('auth/google/', views.GoogleLoginView.as_view(), name='google-login'),
+    
+    # JWT Token
+    path('auth/token/refresh/', TokenRefreshView.as_view(), name='token-refresh'),
+    path('auth/me/', views.CurrentUserView.as_view(), name='current-user'),
 ]

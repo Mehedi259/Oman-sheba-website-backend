@@ -42,6 +42,15 @@ class User(AbstractUser):
     passport_no = models.CharField(max_length=50, blank=True)
     oman_id = models.CharField(max_length=50, blank=True)
     
+    # OAuth / Social Login
+    google_id = models.CharField(max_length=255, blank=True, unique=True, null=True, 
+                                  help_text='Google unique user ID')
+    auth_provider = models.CharField(max_length=20, default='email', 
+                                      choices=[('email', 'Email'), ('google', 'Google')],
+                                      help_text='How the user registered')
+    avatar_url = models.URLField(max_length=500, blank=True, 
+                                  help_text='Profile picture URL from OAuth provider')
+    
     # Location
     city = models.CharField(max_length=100, blank=True)
     area = models.CharField(max_length=100, blank=True)

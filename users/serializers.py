@@ -6,9 +6,9 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['id', 'username', 'email', 'first_name', 'last_name', 
-                  'phone', 'avatar', 'bio', 'city', 
-                  'created_at', 'updated_at']
-        read_only_fields = ['id', 'created_at', 'updated_at']
+                  'name', 'phone', 'avatar', 'avatar_url', 'bio', 'city', 
+                  'auth_provider', 'created_at', 'updated_at']
+        read_only_fields = ['id', 'auth_provider', 'created_at', 'updated_at']
 
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
@@ -31,8 +31,28 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         return user
 
 
+class GoogleAuthSerializer(serializers.Serializer):
+    """Serializer for Google OAuth login request"""
+    id_token = serializers.CharField(
+        required=True,
+        help_text='Google ID token received from Google Sign-In on the frontend'
+    )
+
+
+class TokenResponseSerializer(serializers.Serializer):
+    """Serializer for JWT token response"""
+    access = serializers.CharField(read_only=True)
+    refresh = serializers.CharField(read_only=True)
+    user = UserSerializer(read_only=True)
+    created = serializers.BooleanField(
+        read_only=True,
+        help_text='True if user was newly registered'
+    )
+
+
 class FavoriteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Favorite
         fields = ['id', 'favorite_type', 'favorite_id', 'created_at']
         read_only_fields = ['id', 'created_at']
+
