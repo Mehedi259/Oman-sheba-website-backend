@@ -12,15 +12,23 @@ class JobSerializer(serializers.ModelSerializer):
     user_name = serializers.CharField(source='user.username', read_only=True)
     company_name_en = serializers.CharField(write_only=True, required=False)
     company_name_bn = serializers.CharField(write_only=True, required=False)
+    images = serializers.SerializerMethodField()
     
     class Meta:
         model = Job
         fields = '__all__'
         read_only_fields = ['id', 'user', 'views', 'created_at', 'updated_at']
         extra_kwargs = {
-            'company': {'required': False, 'allow_null': True},
+            'company': {'required': False},
             'contact_name': {'required': False, 'allow_blank': True},
         }
+
+    def get_images(self, obj):
+        request = self.context.get('request')
+        images = ClassifiedImage.objects.filter(content_type='job', content_id=obj.id)
+        if not images:
+            return obj.images if hasattr(obj, 'images') and obj.images else []
+        return [request.build_absolute_uri(img.image.url) if request else img.image.url for img in images]
 
     def create(self, validated_data):
         request = self.context.get('request')
@@ -46,6 +54,7 @@ class JobSerializer(serializers.ModelSerializer):
 
 class PropertySerializer(serializers.ModelSerializer):
     user_name = serializers.CharField(source='user.username', read_only=True)
+    images = serializers.SerializerMethodField()
     
     class Meta:
         model = Property
@@ -56,6 +65,13 @@ class PropertySerializer(serializers.ModelSerializer):
             'category': {'required': False, 'allow_blank': True},
             'type': {'required': False, 'allow_blank': True},
         }
+
+    def get_images(self, obj):
+        request = self.context.get('request')
+        images = ClassifiedImage.objects.filter(content_type='property', content_id=obj.id)
+        if not images:
+            return obj.images if hasattr(obj, 'images') and obj.images else []
+        return [request.build_absolute_uri(img.image.url) if request else img.image.url for img in images]
 
     def create(self, validated_data):
         request = self.context.get('request')
@@ -69,6 +85,7 @@ class PropertySerializer(serializers.ModelSerializer):
 
 class VehicleSerializer(serializers.ModelSerializer):
     user_name = serializers.CharField(source='user.username', read_only=True)
+    images = serializers.SerializerMethodField()
     
     class Meta:
         model = Vehicle
@@ -78,6 +95,13 @@ class VehicleSerializer(serializers.ModelSerializer):
             'contact_name': {'required': False, 'allow_blank': True},
             'purpose': {'required': False, 'allow_blank': True},
         }
+
+    def get_images(self, obj):
+        request = self.context.get('request')
+        images = ClassifiedImage.objects.filter(content_type='vehicle', content_id=obj.id)
+        if not images:
+            return obj.images if hasattr(obj, 'images') and obj.images else []
+        return [request.build_absolute_uri(img.image.url) if request else img.image.url for img in images]
 
     def create(self, validated_data):
         request = self.context.get('request')
@@ -95,6 +119,7 @@ class VehicleSerializer(serializers.ModelSerializer):
 
 class ServiceSerializer(serializers.ModelSerializer):
     user_name = serializers.CharField(source='user.username', read_only=True)
+    images = serializers.SerializerMethodField()
     
     class Meta:
         model = Service
@@ -103,6 +128,13 @@ class ServiceSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'contact_name': {'required': False, 'allow_blank': True},
         }
+
+    def get_images(self, obj):
+        request = self.context.get('request')
+        images = ClassifiedImage.objects.filter(content_type='service', content_id=obj.id)
+        if not images:
+            return obj.images if hasattr(obj, 'images') and obj.images else []
+        return [request.build_absolute_uri(img.image.url) if request else img.image.url for img in images]
 
     def create(self, validated_data):
         request = self.context.get('request')
