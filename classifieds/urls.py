@@ -17,4 +17,6 @@ urlpatterns = [
     # Services
     path('services/', views.ServiceListCreateView.as_view(), name='service-list'),
     path('services/<int:pk>/', views.ServiceDetailView.as_view(), name='service-detail'),
+    # Images
+    path('images/', views.ClassifiedImageListCreateView.as_view(), name='image-list-create'),
 ]

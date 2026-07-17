@@ -1,7 +1,7 @@
 from rest_framework import generics, filters
 from django_filters.rest_framework import DjangoFilterBackend
-from .models import Job, Property, Vehicle, Service
-from .serializers import JobSerializer, PropertySerializer, VehicleSerializer, ServiceSerializer
+from .models import Job, Property, Vehicle, Service, ClassifiedImage
+from .serializers import JobSerializer, PropertySerializer, VehicleSerializer, ServiceSerializer, ClassifiedImageSerializer
 
 
 class JobListCreateView(generics.ListCreateAPIView):
@@ -102,3 +102,11 @@ class ServiceDetailView(generics.RetrieveUpdateDestroyAPIView):
         instance.views += 1
         instance.save(update_fields=['views'])
         return super().retrieve(request, *args, **kwargs)
+
+
+class ClassifiedImageListCreateView(generics.ListCreateAPIView):
+    """Upload and list classified images"""
+    queryset = ClassifiedImage.objects.all()
+    serializer_class = ClassifiedImageSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['content_type', 'content_id']

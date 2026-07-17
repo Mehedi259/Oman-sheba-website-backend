@@ -5,7 +5,7 @@ from .models import Job, Property, Vehicle, Service, ClassifiedImage, Company
 class ClassifiedImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = ClassifiedImage
-        fields = ['id', 'image', 'is_primary', 'uploaded_at']
+        fields = ['id', 'content_type', 'content_id', 'image', 'is_primary', 'uploaded_at']
 
 
 class JobSerializer(serializers.ModelSerializer):
