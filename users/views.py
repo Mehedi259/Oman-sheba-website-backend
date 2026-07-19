@@ -129,3 +129,21 @@ class FavoriteDeleteView(generics.DestroyAPIView):
     def get_queryset(self):
         return Favorite.objects.filter(user=self.request.user)
 
+from .models import Notification
+from .serializers import NotificationSerializer
+
+class NotificationListView(generics.ListAPIView):
+    """List all notifications for the current user"""
+    serializer_class = NotificationSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    
+    def get_queryset(self):
+        return Notification.objects.filter(user=self.request.user)
+
+class NotificationUpdateView(generics.UpdateAPIView):
+    """Update a notification (e.g. mark as read)"""
+    serializer_class = NotificationSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    
+    def get_queryset(self):
+        return Notification.objects.filter(user=self.request.user)

@@ -10,6 +10,9 @@ urlpatterns = [
     path('favorites/', views.FavoriteListCreateView.as_view(), name='favorites-list'),
     path('favorites/<int:pk>/', views.FavoriteDeleteView.as_view(), name='favorite-delete'),
     
+    path('notifications/', views.NotificationListView.as_view(), name='notification-list'),
+    path('notifications/<int:pk>/', views.NotificationUpdateView.as_view(), name='notification-update'),
+    
     # Google OAuth
     path('auth/google/', views.GoogleLoginView.as_view(), name='google-login'),
     
