@@ -127,6 +127,20 @@ class ForumComment(models.Model):
         return f"Comment by {self.author.username} on {self.post.title[:50]}"
 
 
+class ForumLike(models.Model):
+    """Likes on forum posts"""
+    
+    post = models.ForeignKey(ForumPost, on_delete=models.CASCADE, related_name='forum_likes')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        unique_together = ['post', 'user']
+    
+    def __str__(self):
+        return f"{self.user.username} likes ForumPost #{self.post.id}"
+
+
 # ==========================================
 # SIMPLE COMMUNITY POSTS (Original)
 # ==========================================

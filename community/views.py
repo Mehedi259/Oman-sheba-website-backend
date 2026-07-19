@@ -1,7 +1,7 @@
 from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from .models import Post, Comment, Like, Classified, ClassifiedCategory, ForumPost, ForumCategory, ForumComment
+from .models import Post, Comment, Like, Classified, ClassifiedCategory, ForumPost, ForumCategory, ForumComment, ForumLike
 from .serializers import PostSerializer, CommentSerializer, ClassifiedSerializer, ClassifiedCategorySerializer, ForumPostSerializer, ForumCategorySerializer, ForumCommentSerializer
 
 
@@ -127,11 +127,18 @@ class ForumPostLikeView(APIView):
     
     def post(self, request, post_id):
         post = ForumPost.objects.get(id=post_id)
-        # Assuming we just toggle like count for now or track likes if we have a ForumLike model
-        # Wait, the model ForumPost just has `likes = models.PositiveIntegerField(default=0)`
-        # It doesn't have a specific `ForumLike` model tracking who liked what in community/models.py
-        # Actually, let's just increment it for simplicity or check if we need to create one.
-        # Yes, we can just increment.
+        
+        # Check if user already liked the post
+        like, created = ForumLike.objects.get_or_create(post=post, user=request.user)
+        
+        if not created:
+            # User already liked, so unlike it
+            like.delete()
+            post.likes = max(0, post.likes - 1)
+            post.save(update_fields=['likes'])
+            return Response({'message': 'Forum post unliked', 'likes': post.likes}, status=status.HTTP_200_OK)
+            
+        # New like
         post.likes += 1
         post.save(update_fields=['likes'])
         return Response({'message': 'Forum post liked', 'likes': post.likes}, status=status.HTTP_200_OK)
