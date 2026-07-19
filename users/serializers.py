@@ -56,9 +56,48 @@ class TokenResponseSerializer(serializers.Serializer):
     )
 
 
+from classifieds.models import Job, Property, Vehicle, Service
+from community.models import Classified as CommunityClassified
+
 class FavoriteSerializer(serializers.ModelSerializer):
+    item_details = serializers.SerializerMethodField()
+    
     class Meta:
         model = Favorite
-        fields = ['id', 'favorite_type', 'favorite_id', 'created_at']
+        fields = ['id', 'favorite_type', 'favorite_id', 'created_at', 'item_details']
         read_only_fields = ['id', 'created_at']
+
+    def get_item_details(self, obj):
+        try:
+            item = None
+            icon = ''
+            if obj.favorite_type == 'job':
+                item = Job.objects.get(id=obj.favorite_id)
+                icon = '💼'
+            elif obj.favorite_type == 'property':
+                item = Property.objects.get(id=obj.favorite_id)
+                icon = '🏠'
+            elif obj.favorite_type == 'vehicle':
+                item = Vehicle.objects.get(id=obj.favorite_id)
+                icon = '🚗'
+            elif obj.favorite_type == 'service':
+                item = Service.objects.get(id=obj.favorite_id)
+                icon = '🛠️'
+            elif obj.favorite_type == 'classified':
+                item = CommunityClassified.objects.get(id=obj.favorite_id)
+                icon = '🛒'
+                
+            if item:
+                return {
+                    'title': item.title,
+                    'title_bn': getattr(item, 'title_bn', ''),
+                    'description': item.description[:100] + '...' if item.description else '',
+                    'location': item.city,
+                    'price': str(item.price) if getattr(item, 'price', None) else '',
+                    'icon': icon,
+                    'status': item.status
+                }
+        except Exception:
+            pass
+        return None
 
