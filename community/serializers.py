@@ -74,6 +74,19 @@ class ForumPostSerializer(serializers.ModelSerializer):
         fields = '__all__'
         read_only_fields = ['id', 'author', 'created_at', 'updated_at', 'slug', 'views', 'likes']
 
+    def to_representation(self, instance):
+        repr = super().to_representation(instance)
+        # category is a slug string because of SlugRelatedField. 
+        # Frontend expects an object with name, nameBn etc.
+        if instance.category:
+            repr['category'] = {
+                'id': instance.category.id,
+                'name': instance.category.name,
+                'nameBn': instance.category.name_bn,
+                'slug': instance.category.slug
+            }
+        return repr
+
     def to_internal_value(self, data):
         # Convert tags from comma-separated string to list if necessary
         mutable_data = data.copy() if hasattr(data, 'copy') else data
