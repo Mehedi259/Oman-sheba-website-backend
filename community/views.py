@@ -55,10 +55,17 @@ class ClassifiedCategoryListView(generics.ListAPIView):
     permission_classes = [] # Allow any
 
 
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import filters
+
 class ClassifiedListCreateView(generics.ListCreateAPIView):
     """List and create classified ads"""
     queryset = Classified.objects.all()
     serializer_class = ClassifiedSerializer
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    filterset_fields = ['category', 'condition', 'price_negotiable']
+    search_fields = ['title', 'title_bn', 'description', 'description_bn']
+    ordering_fields = ['price', 'created_at']
     
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
