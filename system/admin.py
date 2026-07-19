@@ -6,6 +6,7 @@ from .models import Advertisement, PageView, Setting, AuditLog, HeroSlider
 @admin.register(HeroSlider)
 class HeroSliderAdmin(admin.ModelAdmin):
     list_display = ['order', 'title', 'image_preview', 'cta_text', 'is_active', 'is_external', 'created_at']
+    list_display_links = ['title']
     list_filter = ['is_active', 'is_external']
     list_editable = ['order', 'is_active']
     search_fields = ['title', 'title_bn', 'subtitle']
