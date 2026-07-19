@@ -1,8 +1,8 @@
 from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from .models import Post, Comment, Like, Classified, ClassifiedCategory
-from .serializers import PostSerializer, CommentSerializer, ClassifiedSerializer, ClassifiedCategorySerializer
+from .models import Post, Comment, Like, Classified, ClassifiedCategory, ForumPost, ForumCategory
+from .serializers import PostSerializer, CommentSerializer, ClassifiedSerializer, ClassifiedCategorySerializer, ForumPostSerializer, ForumCategorySerializer
 
 
 class PostListCreateView(generics.ListCreateAPIView):
@@ -65,6 +65,19 @@ class ClassifiedListCreateView(generics.ListCreateAPIView):
 
 
 class ClassifiedDetailView(generics.RetrieveUpdateDestroyAPIView):
-    """Retrieve, update or delete a classified ad"""
+    """Retrieve, update or delete a classified listing"""
     queryset = Classified.objects.all()
     serializer_class = ClassifiedSerializer
+    
+class ForumPostListCreateView(generics.ListCreateAPIView):
+    """List and create forum posts"""
+    queryset = ForumPost.objects.all()
+    serializer_class = ForumPostSerializer
+    
+    def perform_create(self, serializer):
+        serializer.save(author=self.request.user)
+
+class ForumPostDetailView(generics.RetrieveUpdateDestroyAPIView):
+    """Retrieve, update or delete a forum post"""
+    queryset = ForumPost.objects.all()
+    serializer_class = ForumPostSerializer

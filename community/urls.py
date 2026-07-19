@@ -11,4 +11,8 @@ urlpatterns = [
     path('classifieds/', views.ClassifiedListCreateView.as_view(), name='classified-list'),
     path('classifieds/<int:pk>/', views.ClassifiedDetailView.as_view(), name='classified-detail'),
     path('classifieds/categories/', views.ClassifiedCategoryListView.as_view(), name='classified-category-list'),
+    
+    # Forum
+    path('forum/posts/', views.ForumPostListCreateView.as_view(), name='forum-post-list'),
+    path('forum/posts/<int:pk>/', views.ForumPostDetailView.as_view(), name='forum-post-detail'),
 ]

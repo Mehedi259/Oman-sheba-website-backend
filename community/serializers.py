@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Post, Comment, Like, Classified, ClassifiedCategory
+from .models import Post, Comment, Like, Classified, ClassifiedCategory, ForumPost, ForumCategory, ForumComment
 from classifieds.models import ClassifiedImage
 
 
@@ -51,3 +51,33 @@ class ClassifiedSerializer(serializers.ModelSerializer):
         if not images:
             return []
         return [request.build_absolute_uri(img.image.url) if request else img.image.url for img in images]
+
+
+class ForumCategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ForumCategory
+        fields = '__all__'
+
+
+class ForumPostSerializer(serializers.ModelSerializer):
+    author_name = serializers.CharField(source='author.username', read_only=True)
+    author_first_name = serializers.CharField(source='author.first_name', read_only=True)
+    category = serializers.SlugRelatedField(
+        slug_field='slug',
+        queryset=ForumCategory.objects.all(),
+        allow_null=True,
+        required=False
+    )
+    
+    class Meta:
+        model = ForumPost
+        fields = '__all__'
+        read_only_fields = ['id', 'author', 'created_at', 'updated_at', 'slug', 'views', 'likes']
+
+    def to_internal_value(self, data):
+        # Convert tags from comma-separated string to list if necessary
+        mutable_data = data.copy() if hasattr(data, 'copy') else data
+        tags = mutable_data.get('tags')
+        if isinstance(tags, str):
+            mutable_data['tags'] = [tag.strip() for tag in tags.split(',') if tag.strip()]
+        return super().to_internal_value(mutable_data)

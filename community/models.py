@@ -59,6 +59,9 @@ class ForumPost(models.Model):
     # Tags (stored as JSON array)
     tags = models.JSONField(default=list, blank=True)
     
+    # Image (optional)
+    image = models.ImageField(upload_to='forum_posts/', null=True, blank=True)
+    
     # Status
     status = models.CharField(max_length=20, choices=PostStatus.choices, default=PostStatus.PUBLISHED)
     pinned = models.BooleanField(default=False)
