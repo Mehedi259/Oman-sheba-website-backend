@@ -710,6 +710,8 @@ class ClassifiedImage(models.Model):
         ('property', 'Property'),
         ('vehicle', 'Vehicle'),
         ('service', 'Service'),
+        ('classified', 'Classified'),
+        ('others', 'Others'),
     ]
     
     content_type = models.CharField(max_length=20, choices=CONTENT_TYPE_CHOICES)
