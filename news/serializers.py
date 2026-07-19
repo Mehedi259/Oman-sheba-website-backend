@@ -52,9 +52,6 @@ class ArticleSerializer(serializers.ModelSerializer):
         ]
     
     def get_featured_image(self, obj):
-        request = self.context.get('request')
         if obj.featured_image:
-            if request:
-                return request.build_absolute_uri(obj.featured_image.url)
             return obj.featured_image.url
         return None
