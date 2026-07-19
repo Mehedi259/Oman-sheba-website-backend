@@ -1,8 +1,8 @@
 from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from .models import Post, Comment, Like
-from .serializers import PostSerializer, CommentSerializer
+from .models import Post, Comment, Like, Classified, ClassifiedCategory
+from .serializers import PostSerializer, CommentSerializer, ClassifiedSerializer, ClassifiedCategorySerializer
 
 
 class PostListCreateView(generics.ListCreateAPIView):
@@ -46,3 +46,25 @@ class PostLikeView(APIView):
             return Response({'message': 'Post unliked'}, status=status.HTTP_200_OK)
         
         return Response({'message': 'Post liked'}, status=status.HTTP_201_CREATED)
+
+
+class ClassifiedCategoryListView(generics.ListAPIView):
+    """List all classified categories"""
+    queryset = ClassifiedCategory.objects.all()
+    serializer_class = ClassifiedCategorySerializer
+    permission_classes = [] # Allow any
+
+
+class ClassifiedListCreateView(generics.ListCreateAPIView):
+    """List and create classified ads"""
+    queryset = Classified.objects.all()
+    serializer_class = ClassifiedSerializer
+    
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
+
+
+class ClassifiedDetailView(generics.RetrieveUpdateDestroyAPIView):
+    """Retrieve, update or delete a classified ad"""
+    queryset = Classified.objects.all()
+    serializer_class = ClassifiedSerializer

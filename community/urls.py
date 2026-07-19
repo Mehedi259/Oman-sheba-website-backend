@@ -6,4 +6,9 @@ urlpatterns = [
     path('posts/<int:pk>/', views.PostDetailView.as_view(), name='post-detail'),
     path('posts/<int:post_id>/comments/', views.CommentListCreateView.as_view(), name='post-comments'),
     path('posts/<int:post_id>/like/', views.PostLikeView.as_view(), name='post-like'),
+    
+    # Classifieds
+    path('classifieds/', views.ClassifiedListCreateView.as_view(), name='classified-list'),
+    path('classifieds/<int:pk>/', views.ClassifiedDetailView.as_view(), name='classified-detail'),
+    path('classifieds/categories/', views.ClassifiedCategoryListView.as_view(), name='classified-category-list'),
 ]
