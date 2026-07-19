@@ -13,6 +13,9 @@ urlpatterns = [
     path('classifieds/categories/', views.ClassifiedCategoryListView.as_view(), name='classified-category-list'),
     
     # Forum
+    path('forum/categories/', views.ForumCategoryListView.as_view(), name='forum-category-list'),
     path('forum/posts/', views.ForumPostListCreateView.as_view(), name='forum-post-list'),
     path('forum/posts/<int:pk>/', views.ForumPostDetailView.as_view(), name='forum-post-detail'),
+    path('forum/posts/<int:post_id>/comments/', views.ForumCommentListCreateView.as_view(), name='forum-post-comments'),
+    path('forum/posts/<int:post_id>/like/', views.ForumPostLikeView.as_view(), name='forum-post-like'),
 ]

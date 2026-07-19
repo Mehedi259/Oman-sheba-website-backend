@@ -53,6 +53,15 @@ class ClassifiedSerializer(serializers.ModelSerializer):
         return [request.build_absolute_uri(img.image.url) if request else img.image.url for img in images]
 
 
+class ForumCommentSerializer(serializers.ModelSerializer):
+    author_name = serializers.CharField(source='author.username', read_only=True)
+    author_first_name = serializers.CharField(source='author.first_name', read_only=True)
+    
+    class Meta:
+        model = ForumComment
+        fields = ['id', 'content', 'author', 'author_name', 'author_first_name', 'post', 'parent', 'created_at', 'updated_at']
+        read_only_fields = ['id', 'author', 'post', 'created_at', 'updated_at']
+
 class ForumCategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = ForumCategory
@@ -68,6 +77,7 @@ class ForumPostSerializer(serializers.ModelSerializer):
         allow_null=True,
         required=False
     )
+    comments_count = serializers.IntegerField(source='comments.count', read_only=True)
     
     class Meta:
         model = ForumPost

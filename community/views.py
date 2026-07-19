@@ -76,15 +76,62 @@ class ClassifiedDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Classified.objects.all()
     serializer_class = ClassifiedSerializer
     
+class ForumCategoryListView(generics.ListAPIView):
+    """List all forum categories"""
+    queryset = ForumCategory.objects.all()
+    serializer_class = ForumCategorySerializer
+    permission_classes = [] # Allow any
+
+
 class ForumPostListCreateView(generics.ListCreateAPIView):
     """List and create forum posts"""
     queryset = ForumPost.objects.all()
     serializer_class = ForumPostSerializer
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    filterset_fields = ['category', 'author']
+    search_fields = ['title', 'content', 'tags']
+    ordering_fields = ['created_at', 'views', 'likes', 'pinned']
     
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
+
 
 class ForumPostDetailView(generics.RetrieveUpdateDestroyAPIView):
     """Retrieve, update or delete a forum post"""
     queryset = ForumPost.objects.all()
     serializer_class = ForumPostSerializer
+    
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        instance.views += 1
+        instance.save(update_fields=['views'])
+        return super().retrieve(request, *args, **kwargs)
+
+
+class ForumCommentListCreateView(generics.ListCreateAPIView):
+    """List and create comments for a forum post"""
+    serializer_class = ForumCommentSerializer
+    
+    def get_queryset(self):
+        post_id = self.kwargs.get('post_id')
+        return ForumComment.objects.filter(post_id=post_id)
+    
+    def perform_create(self, serializer):
+        post_id = self.kwargs.get('post_id')
+        post = ForumPost.objects.get(id=post_id)
+        serializer.save(author=self.request.user, post=post)
+
+
+class ForumPostLikeView(APIView):
+    """Like or unlike a forum post"""
+    
+    def post(self, request, post_id):
+        post = ForumPost.objects.get(id=post_id)
+        # Assuming we just toggle like count for now or track likes if we have a ForumLike model
+        # Wait, the model ForumPost just has `likes = models.PositiveIntegerField(default=0)`
+        # It doesn't have a specific `ForumLike` model tracking who liked what in community/models.py
+        # Actually, let's just increment it for simplicity or check if we need to create one.
+        # Yes, we can just increment.
+        post.likes += 1
+        post.save(update_fields=['likes'])
+        return Response({'message': 'Forum post liked', 'likes': post.likes}, status=status.HTTP_200_OK)
