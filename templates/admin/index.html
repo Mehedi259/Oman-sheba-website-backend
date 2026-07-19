@@ -367,6 +367,28 @@
         </div>
     </div>
 
+    <!-- Content Management -->
+    <div class="quick-actions-section">
+        <h2>⚙️ Content & System Management</h2>
+        <div class="quick-actions">
+            <a href="{% url 'admin:system_heroslider_changelist' %}" class="action-btn">
+                <span class="icon">🖼️</span>
+                <div class="label">Hero Sliders</div>
+            </a>
+            <a href="{% url 'admin:news_article_changelist' %}" class="action-btn">
+                <span class="icon">📝</span>
+                <div class="label">Articles (News)</div>
+            </a>
+            <a href="{% url 'admin:system_advertisement_changelist' %}" class="action-btn">
+                <span class="icon">📢</span>
+                <div class="label">Advertisements</div>
+            </a>
+            <a href="{% url 'admin:news_articlecategory_changelist' %}" class="action-btn">
+                <span class="icon">📁</span>
+                <div class="label">Categories</div>
+            </a>
+        </div>
+    </div>
     <!-- Recent Activity -->
     <div class="activity-section">
         <h2>🕐 Recent Activity</h2>
