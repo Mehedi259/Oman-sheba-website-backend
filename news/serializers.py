@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import News, NewsComment
+from .models import News, NewsComment, Article, ArticleCategory
 
 
 class NewsCommentSerializer(serializers.ModelSerializer):
@@ -27,3 +27,34 @@ class NewsSerializer(serializers.ModelSerializer):
                   'author', 'author_name', 'featured_image', 'is_featured', 
                   'views', 'comments_count', 'published_at', 'created_at', 'updated_at']
         read_only_fields = ['id', 'author', 'views', 'created_at', 'updated_at']
+
+
+class ArticleCategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ArticleCategory
+        fields = '__all__'
+
+
+class ArticleSerializer(serializers.ModelSerializer):
+    category_name = serializers.CharField(source='category.name', read_only=True)
+    category_name_bn = serializers.CharField(source='category.name_bn', read_only=True)
+    featured_image = serializers.SerializerMethodField()
+    
+    class Meta:
+        model = Article
+        fields = [
+            'id', 'title', 'title_bn', 'slug', 'excerpt', 'excerpt_bn',
+            'content', 'content_bn', 'type', 'category', 'category_name',
+            'category_name_bn', 'featured_image', 'images', 'tags',
+            'meta_title', 'meta_description', 'author_name', 'status',
+            'featured', 'views', 'source', 'source_url',
+            'published_at', 'created_at', 'updated_at'
+        ]
+    
+    def get_featured_image(self, obj):
+        request = self.context.get('request')
+        if obj.featured_image:
+            if request:
+                return request.build_absolute_uri(obj.featured_image.url)
+            return obj.featured_image.url
+        return None

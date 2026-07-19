@@ -1,7 +1,7 @@
 from rest_framework import generics, filters
 from django_filters.rest_framework import DjangoFilterBackend
-from .models import News, NewsComment
-from .serializers import NewsSerializer, NewsCommentSerializer
+from .models import News, NewsComment, Article
+from .serializers import NewsSerializer, NewsCommentSerializer, ArticleSerializer
 
 
 class NewsListView(generics.ListAPIView):
@@ -39,3 +39,26 @@ class NewsCommentListCreateView(generics.ListCreateAPIView):
         news_slug = self.kwargs.get('slug')
         news = News.objects.get(slug=news_slug)
         serializer.save(user=self.request.user, news=news)
+
+
+class ArticleListView(generics.ListAPIView):
+    """List all published articles"""
+    queryset = Article.objects.filter(status='PUBLISHED')
+    serializer_class = ArticleSerializer
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    filterset_fields = ['type', 'category', 'featured']
+    search_fields = ['title', 'title_bn', 'content', 'content_bn']
+    ordering_fields = ['published_at', 'views']
+
+
+class ArticleDetailView(generics.RetrieveAPIView):
+    """Retrieve article details"""
+    queryset = Article.objects.filter(status='PUBLISHED')
+    serializer_class = ArticleSerializer
+    lookup_field = 'slug'
+    
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        instance.views += 1
+        instance.save(update_fields=['views'])
+        return super().retrieve(request, *args, **kwargs)

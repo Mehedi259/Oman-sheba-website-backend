@@ -153,3 +153,38 @@ class AuditLog(models.Model):
     
     def __str__(self):
         return f"{self.action} on {self.entity} - {self.created_at}"
+
+
+# ==========================================
+# HERO SLIDER
+# ==========================================
+
+class HeroSlider(models.Model):
+    """Hero slider banners for the homepage"""
+    
+    title = models.CharField(max_length=500, help_text='স্লাইডারের শিরোনাম')
+    title_bn = models.CharField(max_length=500, blank=True, help_text='শিরোনাম (বাংলা)')
+    subtitle = models.CharField(max_length=500, blank=True, help_text='সাবটাইটেল')
+    subtitle_bn = models.CharField(max_length=500, blank=True, help_text='সাবটাইটেল (বাংলা)')
+    image = models.ImageField(upload_to='sliders/', help_text='ব্যানার ইমেজ (১২০০x৪০০ পিক্সেল রেকমেন্ডেড)')
+    cta_text = models.CharField(max_length=100, default='বিস্তারিত দেখুন', help_text='বাটনের টেক্সট')
+    link = models.CharField(max_length=500, default='/', help_text='রিডাইরেক্ট URL (যেমন /jobs বা https://example.com)')
+    is_external = models.BooleanField(default=False, help_text='এক্সটার্নাল লিঙ্ক হলে চেক করুন')
+    overlay_gradient = models.CharField(
+        max_length=200, 
+        default='from-blue-950/85 via-blue-900/55 to-transparent',
+        help_text='CSS gradient class for text readability overlay'
+    )
+    order = models.IntegerField(default=0, help_text='ক্রম (ছোট সংখ্যা আগে দেখাবে)')
+    is_active = models.BooleanField(default=True, help_text='অ্যাক্টিভ/ডিঅ্যাক্টিভ')
+    
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        ordering = ['order', '-created_at']
+        verbose_name = 'Hero Slider'
+        verbose_name_plural = 'Hero Sliders'
+    
+    def __str__(self):
+        return f"[{self.order}] {self.title}"
