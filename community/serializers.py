@@ -31,6 +31,12 @@ class ClassifiedCategorySerializer(serializers.ModelSerializer):
 class ClassifiedSerializer(serializers.ModelSerializer):
     owner_name = serializers.CharField(source='owner.username', read_only=True)
     category_name = serializers.CharField(source='category.name', read_only=True)
+    category = serializers.SlugRelatedField(
+        slug_field='slug',
+        queryset=ClassifiedCategory.objects.all(),
+        allow_null=True,
+        required=False
+    )
     
     class Meta:
         model = Classified
