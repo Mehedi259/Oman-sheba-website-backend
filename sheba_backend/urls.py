@@ -116,6 +116,7 @@ urlpatterns = [
     path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
     
     # API endpoints
+    path('api/admin/', include('sheba_backend.admin_urls')),
     path('api/users/', include('users.urls')),
     path('api/classifieds/', include('classifieds.urls')),
     path('api/emergency/', include('emergency.urls')),
