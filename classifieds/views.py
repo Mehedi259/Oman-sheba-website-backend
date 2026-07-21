@@ -84,8 +84,8 @@ class ServiceListCreateView(generics.ListCreateAPIView):
     queryset = Service.objects.filter(status='PUBLISHED')
     serializer_class = ServiceSerializer
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
-    filterset_fields = ['category', 'city']
-    search_fields = ['title', 'description', 'category', 'service_type']
+    filterset_fields = ['category', 'category__slug', 'city']
+    search_fields = ['title', 'description', 'category__name', 'service_type']
     ordering_fields = ['created_at', 'price', 'views']
     
     def perform_create(self, serializer):
