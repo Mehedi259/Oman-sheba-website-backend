@@ -45,10 +45,13 @@ class AdminSliderDetailView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [permissions.IsAdminUser]
 
 # Jobs Admin
-class AdminJobListView(generics.ListAPIView):
+class AdminJobListView(generics.ListCreateAPIView):
     queryset = Job.objects.all().order_by('-created_at')
     serializer_class = JobSerializer
     permission_classes = [permissions.IsAdminUser]
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
 
 class AdminJobDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Job.objects.all()
@@ -56,10 +59,13 @@ class AdminJobDetailView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [permissions.IsAdminUser]
 
 # Community Posts Admin
-class AdminPostListView(generics.ListAPIView):
+class AdminPostListView(generics.ListCreateAPIView):
     queryset = Post.objects.all().order_by('-created_at')
     serializer_class = PostSerializer
     permission_classes = [permissions.IsAdminUser]
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
 
 class AdminPostDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Post.objects.all()
@@ -67,30 +73,39 @@ class AdminPostDetailView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [permissions.IsAdminUser]
 
 # Additional Classifieds Admin (Properties, Vehicles, Services)
-class AdminPropertyListView(generics.ListAPIView):
+class AdminPropertyListView(generics.ListCreateAPIView):
     queryset = Property.objects.all().order_by('-created_at')
     serializer_class = PropertySerializer
     permission_classes = [permissions.IsAdminUser]
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
 
 class AdminPropertyDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Property.objects.all()
     serializer_class = PropertySerializer
     permission_classes = [permissions.IsAdminUser]
 
-class AdminVehicleListView(generics.ListAPIView):
+class AdminVehicleListView(generics.ListCreateAPIView):
     queryset = Vehicle.objects.all().order_by('-created_at')
     serializer_class = VehicleSerializer
     permission_classes = [permissions.IsAdminUser]
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
 
 class AdminVehicleDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Vehicle.objects.all()
     serializer_class = VehicleSerializer
     permission_classes = [permissions.IsAdminUser]
 
-class AdminServiceListView(generics.ListAPIView):
+class AdminServiceListView(generics.ListCreateAPIView):
     queryset = Service.objects.all().order_by('-created_at')
     serializer_class = ServiceSerializer
     permission_classes = [permissions.IsAdminUser]
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
 
 class AdminServiceDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Service.objects.all()
@@ -102,6 +117,9 @@ class AdminArticleListView(generics.ListCreateAPIView):
     queryset = Article.objects.all().order_by('-created_at')
     serializer_class = ArticleSerializer
     permission_classes = [permissions.IsAdminUser]
+
+    def perform_create(self, serializer):
+        serializer.save(author=self.request.user)
 
 class AdminArticleDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Article.objects.all()
