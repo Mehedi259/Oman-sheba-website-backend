@@ -1,4 +1,5 @@
 from rest_framework import generics, filters
+import django_filters
 from django_filters.rest_framework import DjangoFilterBackend
 from .models import Job, Property, Vehicle, Service, ClassifiedImage
 from .serializers import JobSerializer, PropertySerializer, VehicleSerializer, ServiceSerializer, ClassifiedImageSerializer
@@ -79,13 +80,20 @@ class VehicleDetailView(generics.RetrieveUpdateDestroyAPIView):
         return super().retrieve(request, *args, **kwargs)
 
 
+class ServiceFilter(django_filters.FilterSet):
+    category__slug = django_filters.CharFilter(field_name='category', lookup_expr='iexact')
+    
+    class Meta:
+        model = Service
+        fields = ['category', 'city']
+
+
 class ServiceListCreateView(generics.ListCreateAPIView):
-    """List all services or create new service"""
     queryset = Service.objects.filter(status='PUBLISHED')
     serializer_class = ServiceSerializer
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
-    filterset_fields = ['category', 'category__slug', 'city']
-    search_fields = ['title', 'description', 'category__name', 'service_type']
+    filterset_class = ServiceFilter
+    search_fields = ['title', 'description', 'category', 'service_type']
     ordering_fields = ['created_at', 'price', 'views']
     
     def perform_create(self, serializer):
