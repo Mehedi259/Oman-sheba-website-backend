@@ -1,5 +1,5 @@
 from django.urls import path
-from rest_framework_simplejwt.views import TokenRefreshView
+from rest_framework_simplejwt.views import TokenRefreshView, TokenObtainPairView
 from . import views
 
 urlpatterns = [
@@ -17,6 +17,7 @@ urlpatterns = [
     path('auth/google/', views.GoogleLoginView.as_view(), name='google-login'),
     
     # JWT Token
+    path('auth/token/', TokenObtainPairView.as_view(), name='token-obtain-pair'),
     path('auth/token/refresh/', TokenRefreshView.as_view(), name='token-refresh'),
     path('auth/me/', views.CurrentUserView.as_view(), name='current-user'),
 ]
