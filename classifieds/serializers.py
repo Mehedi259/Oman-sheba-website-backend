@@ -119,6 +119,7 @@ class VehicleSerializer(serializers.ModelSerializer):
 
 class ServiceSerializer(serializers.ModelSerializer):
     user_name = serializers.CharField(source='user.username', read_only=True)
+    category_name = serializers.CharField(write_only=True, required=False)
     images = serializers.SerializerMethodField()
     
     class Meta:
@@ -127,6 +128,7 @@ class ServiceSerializer(serializers.ModelSerializer):
         read_only_fields = ['id', 'user', 'views', 'created_at', 'updated_at']
         extra_kwargs = {
             'contact_name': {'required': False, 'allow_blank': True},
+            'category': {'required': False, 'allow_null': True},
         }
 
     def get_images(self, obj):
@@ -140,7 +142,29 @@ class ServiceSerializer(serializers.ModelSerializer):
         request = self.context.get('request')
         user = request.user if request else None
 
+        category_name = validated_data.pop('category_name', None)
+        if category_name and not validated_data.get('category'):
+            from .models import ServiceCategory
+            from django.utils.text import slugify
+            cat, _ = ServiceCategory.objects.get_or_create(
+                name=category_name,
+                defaults={'slug': slugify(category_name)}
+            )
+            validated_data['category'] = cat
+
         if not validated_data.get('contact_name') and user:
             validated_data['contact_name'] = getattr(user, 'name', user.first_name) or user.username
 
         return super().create(validated_data)
+        
+    def update(self, instance, validated_data):
+        category_name = validated_data.pop('category_name', None)
+        if category_name and not validated_data.get('category'):
+            from .models import ServiceCategory
+            from django.utils.text import slugify
+            cat, _ = ServiceCategory.objects.get_or_create(
+                name=category_name,
+                defaults={'slug': slugify(category_name)}
+            )
+            validated_data['category'] = cat
+        return super().update(instance, validated_data)
