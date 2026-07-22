@@ -7,6 +7,9 @@ urlpatterns = [
     path('login/', views.LoginView.as_view(), name='user-login'),
     path('logout/', views.LogoutView.as_view(), name='user-logout'),
     path('profile/', views.UserProfileView.as_view(), name='user-profile'),
+    path('change-password/', views.ChangePasswordView.as_view(), name='change-password'),
+    path('my-posts/', views.UserMyPostsView.as_view(), name='user-my-posts'),
+    path('applications/', views.UserJobApplicationsView.as_view(), name='user-applications'),
     path('favorites/', views.FavoriteListCreateView.as_view(), name='favorites-list'),
     path('favorites/<int:pk>/', views.FavoriteDeleteView.as_view(), name='favorite-delete'),
     

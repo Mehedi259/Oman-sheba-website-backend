@@ -30,6 +30,37 @@ class JobDetailView(generics.RetrieveUpdateDestroyAPIView):
         return super().retrieve(request, *args, **kwargs)
 
 
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import permissions, status
+from .models import JobApplication
+
+class JobApplyView(APIView):
+    """Apply for a job or check application status"""
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request, pk):
+        try:
+            job = Job.objects.get(pk=pk)
+        except Job.DoesNotExist:
+            return Response({'error': 'Job not found'}, status=status.HTTP_404_NOT_FOUND)
+        
+        cover_letter = request.data.get('cover_letter', '')
+        application, created = JobApplication.objects.get_or_create(
+            job=job,
+            user=request.user,
+            defaults={'cover_letter': cover_letter}
+        )
+        if not created:
+            return Response({'message': 'You have already applied for this job', 'applied': True}, status=status.HTTP_200_OK)
+        
+        return Response({'message': 'Application submitted successfully', 'id': application.id, 'applied': True}, status=status.HTTP_201_CREATED)
+
+    def get(self, request, pk):
+        applied = JobApplication.objects.filter(job_id=pk, user=request.user).exists()
+        return Response({'applied': applied})
+
+
 class PropertyListCreateView(generics.ListCreateAPIView):
     """List all properties or create new property"""
     queryset = Property.objects.filter(status='PUBLISHED')

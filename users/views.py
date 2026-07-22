@@ -147,3 +147,73 @@ class NotificationUpdateView(generics.UpdateAPIView):
     
     def get_queryset(self):
         return Notification.objects.filter(user=self.request.user)
+
+
+from .serializers import ChangePasswordSerializer
+
+class ChangePasswordView(APIView):
+    """Change current user password"""
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request):
+        serializer = ChangePasswordSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = request.user
+        if not user.check_password(serializer.validated_data['old_password']):
+            return Response({'error': 'Old password is incorrect'}, status=status.HTTP_400_BAD_REQUEST)
+        user.set_password(serializer.validated_data['new_password'])
+        user.save()
+        return Response({'message': 'Password updated successfully'}, status=status.HTTP_200_OK)
+
+
+from classifieds.models import Job, Property, Vehicle, Service, JobApplication
+from classifieds.serializers import JobSerializer, PropertySerializer, VehicleSerializer, ServiceSerializer
+
+class UserMyPostsView(APIView):
+    """Retrieve all posts created by the authenticated user"""
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        user = request.user
+        from django.db.models import Q
+        user_filter = Q(user=user)
+        if user.email:
+            user_filter |= Q(contact_email__iexact=user.email)
+        if user.phone:
+            user_filter |= Q(contact_phone=user.phone)
+
+        jobs = JobSerializer(Job.objects.filter(user_filter).distinct(), many=True, context={'request': request}).data
+        properties = PropertySerializer(Property.objects.filter(user_filter).distinct(), many=True, context={'request': request}).data
+        vehicles = VehicleSerializer(Vehicle.objects.filter(user_filter).distinct(), many=True, context={'request': request}).data
+        services = ServiceSerializer(Service.objects.filter(user_filter).distinct(), many=True, context={'request': request}).data
+        
+        # Tag items with category type
+        for item in jobs: item['post_type'] = 'job'
+        for item in properties: item['post_type'] = 'property'
+        for item in vehicles: item['post_type'] = 'vehicle'
+        for item in services: item['post_type'] = 'service'
+        
+        all_posts = jobs + properties + vehicles + services
+        all_posts.sort(key=lambda x: x.get('created_at', ''), reverse=True)
+        return Response(all_posts)
+
+
+class UserJobApplicationsView(APIView):
+    """Retrieve job applications submitted by the current user"""
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        user = request.user
+        apps = JobApplication.objects.filter(user=user).select_related('job')
+        res = []
+        for app in apps:
+            res.append({
+                'id': app.id,
+                'job_id': app.job.id,
+                'job_title': app.job.title_bn or app.job.title,
+                'company_name': app.job.company.name if app.job.company else '',
+                'status': app.status,
+                'created_at': app.created_at,
+            })
+        return Response(res)
+

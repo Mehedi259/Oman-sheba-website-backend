@@ -12,9 +12,15 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['id', 'username', 'email', 'first_name', 'last_name', 
-                  'name', 'phone', 'avatar', 'avatar_url', 'bio', 'city', 
+                  'name', 'name_bn', 'phone', 'avatar', 'avatar_url', 'bio', 
+                  'city', 'area', 'date_of_birth', 'language',
                   'auth_provider', 'created_at', 'updated_at']
         read_only_fields = ['id', 'auth_provider', 'created_at', 'updated_at']
+
+
+class ChangePasswordSerializer(serializers.Serializer):
+    old_password = serializers.CharField(required=True)
+    new_password = serializers.CharField(required=True, min_length=8)
 
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
