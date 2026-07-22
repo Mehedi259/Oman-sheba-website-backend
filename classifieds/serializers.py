@@ -28,7 +28,14 @@ class JobSerializer(serializers.ModelSerializer):
         images = ClassifiedImage.objects.filter(content_type='job', content_id=obj.id)
         if not images:
             return obj.images if hasattr(obj, 'images') and obj.images else []
-        return [request.build_absolute_uri(img.image.url) if request else img.image.url for img in images]
+        res = []
+        for img in images:
+            if img.image:
+                try:
+                    res.append(request.build_absolute_uri(img.image.url) if request else img.image.url)
+                except Exception:
+                    res.append(img.image.url)
+        return res
 
     def create(self, validated_data):
         request = self.context.get('request')
