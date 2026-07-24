@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, re_path
 from rest_framework_simplejwt.views import TokenRefreshView, TokenObtainPairView
 from . import views
 
@@ -17,7 +17,7 @@ urlpatterns = [
     path('notifications/<int:pk>/', views.NotificationUpdateView.as_view(), name='notification-update'),
     
     # Google OAuth
-    path('auth/google/', views.GoogleLoginView.as_view(), name='google-login'),
+    re_path(r'^auth/google/?$', views.GoogleLoginView.as_view(), name='google-login'),
     
     # JWT Token
     path('auth/token/', TokenObtainPairView.as_view(), name='token-obtain-pair'),
