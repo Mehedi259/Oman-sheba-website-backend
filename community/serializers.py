@@ -24,6 +24,8 @@ class PostSerializer(serializers.ModelSerializer):
         read_only_fields = ['id', 'user', 'created_at', 'updated_at']
 
 class ClassifiedCategorySerializer(serializers.ModelSerializer):
+    count = serializers.IntegerField(source='classifieds.count', read_only=True)
+    
     class Meta:
         model = ClassifiedCategory
         fields = '__all__'
