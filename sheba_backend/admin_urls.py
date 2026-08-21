@@ -18,6 +18,10 @@ urlpatterns = [
     path('posts/', admin_views.AdminPostListView.as_view(), name='admin-post-list'),
     path('posts/<int:pk>/', admin_views.AdminPostDetailView.as_view(), name='admin-post-detail'),
     
+    # Market (Community Classifieds)
+    path('market/', admin_views.AdminMarketListView.as_view(), name='admin-market-list'),
+    path('market/<int:pk>/', admin_views.AdminMarketDetailView.as_view(), name='admin-market-detail'),
+    
     # Additional Classifieds
     path('properties/', admin_views.AdminPropertyListView.as_view(), name='admin-property-list'),
     path('properties/<int:pk>/', admin_views.AdminPropertyDetailView.as_view(), name='admin-property-detail'),

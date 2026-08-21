@@ -5,8 +5,8 @@ from system.serializers import HeroSliderSerializer
 from users.serializers import UserSerializer
 from classifieds.models import Job
 from classifieds.serializers import JobSerializer
-from community.models import Post
-from community.serializers import PostSerializer
+from community.models import Post, Classified
+from community.serializers import PostSerializer, ClassifiedSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.db.models.functions import TruncMonth
@@ -70,6 +70,20 @@ class AdminPostListView(generics.ListCreateAPIView):
 class AdminPostDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
+    permission_classes = [permissions.IsAdminUser]
+
+# Market Admin (Community Classifieds)
+class AdminMarketListView(generics.ListCreateAPIView):
+    queryset = Classified.objects.all().order_by('-created_at')
+    serializer_class = ClassifiedSerializer
+    permission_classes = [permissions.IsAdminUser]
+
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
+
+class AdminMarketDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Classified.objects.all()
+    serializer_class = ClassifiedSerializer
     permission_classes = [permissions.IsAdminUser]
 
 # Additional Classifieds Admin (Properties, Vehicles, Services)
