@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Job, Property, Vehicle, Service, ClassifiedImage, Company
+from .models import Job, Property, Vehicle, Service, ClassifiedImage, Company, Review
 
 
 class ClassifiedImageSerializer(serializers.ModelSerializer):
@@ -120,6 +120,10 @@ class VehicleSerializer(serializers.ModelSerializer):
         # Default purpose if missing
         if not validated_data.get('purpose'):
             validated_data['purpose'] = 'SALE'
+        
+        # Default status if missing
+        if not validated_data.get('status'):
+            validated_data['status'] = 'PUBLISHED'
 
         return super().create(validated_data)
 
@@ -175,3 +179,12 @@ class ServiceSerializer(serializers.ModelSerializer):
             )
             validated_data['category'] = cat
         return super().update(instance, validated_data)
+
+
+class ReviewSerializer(serializers.ModelSerializer):
+    user_name = serializers.CharField(source='user.username', read_only=True)
+    
+    class Meta:
+        model = Review
+        fields = ['id', 'rating', 'comment', 'reviewable_type', 'reviewable_id', 'user', 'user_name', 'status', 'created_at']
+        read_only_fields = ['id', 'user', 'user_name', 'status', 'created_at']

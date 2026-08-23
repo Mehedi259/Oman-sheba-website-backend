@@ -44,6 +44,10 @@ class BaseClassified(models.Model):
     verified = models.BooleanField(default=False)
     views = models.PositiveIntegerField(default=0)
     
+    # Rating & Reviews
+    rating = models.FloatField(default=0.0)
+    review_count = models.PositiveIntegerField(default=0)
+    
     # SEO
     meta_title = models.CharField(max_length=255, blank=True)
     meta_description = models.TextField(blank=True)

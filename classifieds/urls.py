@@ -20,4 +20,7 @@ urlpatterns = [
     path('services/<int:pk>/', views.ServiceDetailView.as_view(), name='service-detail'),
     # Images
     path('images/', views.ClassifiedImageListCreateView.as_view(), name='image-list-create'),
+    
+    # Reviews
+    path('reviews/', views.ReviewListCreateView.as_view(), name='review-list-create'),
 ]

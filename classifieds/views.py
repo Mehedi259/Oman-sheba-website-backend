@@ -1,8 +1,8 @@
 from rest_framework import generics, filters
 import django_filters
 from django_filters.rest_framework import DjangoFilterBackend
-from .models import Job, Property, Vehicle, Service, ClassifiedImage
-from .serializers import JobSerializer, PropertySerializer, VehicleSerializer, ServiceSerializer, ClassifiedImageSerializer
+from .models import Job, Property, Vehicle, Service, ClassifiedImage, Review
+from .serializers import JobSerializer, PropertySerializer, VehicleSerializer, ServiceSerializer, ClassifiedImageSerializer, ReviewSerializer
 
 
 class JobListCreateView(generics.ListCreateAPIView):
@@ -149,3 +149,36 @@ class ClassifiedImageListCreateView(generics.ListCreateAPIView):
     serializer_class = ClassifiedImageSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['content_type', 'content_id']
+
+
+class ReviewListCreateView(generics.ListCreateAPIView):
+    """Submit and list reviews for classifieds"""
+    queryset = Review.objects.all()
+    serializer_class = ReviewSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['reviewable_type', 'reviewable_id']
+
+    def perform_create(self, serializer):
+        # Save the review
+        review = serializer.save(user=self.request.user)
+        
+        # Update the aggregated rating on the target object
+        try:
+            target_model = None
+            if review.reviewable_type == 'job': target_model = Job
+            elif review.reviewable_type == 'property': target_model = Property
+            elif review.reviewable_type == 'vehicle': target_model = Vehicle
+            elif review.reviewable_type == 'service': target_model = Service
+            
+            if target_model:
+                target = target_model.objects.get(id=review.reviewable_id)
+                # Recalculate average
+                reviews = Review.objects.filter(reviewable_type=review.reviewable_type, reviewable_id=review.reviewable_id)
+                total_rating = sum(r.rating for r in reviews)
+                count = reviews.count()
+                
+                target.rating = total_rating / count if count > 0 else 0
+                target.review_count = count
+                target.save(update_fields=['rating', 'review_count'])
+        except Exception as e:
+            print("Failed to update aggregate rating:", e)
