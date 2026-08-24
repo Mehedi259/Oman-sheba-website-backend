@@ -4,7 +4,10 @@ from classifieds.models import ClassifiedImage
 
 
 class CommentSerializer(serializers.ModelSerializer):
-    user_name = serializers.CharField(source='user.username', read_only=True)
+    user_name = serializers.SerializerMethodField()
+    
+    def get_user_name(self, obj):
+        return obj.user.name or f"{obj.user.first_name} {obj.user.last_name}".strip() or obj.user.username
     
     class Meta:
         model = Comment
@@ -13,7 +16,10 @@ class CommentSerializer(serializers.ModelSerializer):
 
 
 class PostSerializer(serializers.ModelSerializer):
-    user_name = serializers.CharField(source='user.username', read_only=True)
+    user_name = serializers.SerializerMethodField()
+    
+    def get_user_name(self, obj):
+        return obj.user.name or f"{obj.user.first_name} {obj.user.last_name}".strip() or obj.user.username
     comments_count = serializers.IntegerField(source='comments.count', read_only=True)
     likes_count = serializers.IntegerField(source='likes.count', read_only=True)
     
@@ -32,7 +38,10 @@ class ClassifiedCategorySerializer(serializers.ModelSerializer):
 
 
 class ClassifiedSerializer(serializers.ModelSerializer):
-    owner_name = serializers.CharField(source='owner.username', read_only=True)
+    owner_name = serializers.SerializerMethodField()
+    
+    def get_owner_name(self, obj):
+        return obj.owner.name or f"{obj.owner.first_name} {obj.owner.last_name}".strip() or obj.owner.username
     category_name = serializers.CharField(source='category.name', read_only=True)
     category = serializers.SlugRelatedField(
         slug_field='slug',
@@ -56,7 +65,10 @@ class ClassifiedSerializer(serializers.ModelSerializer):
 
 
 class ForumCommentSerializer(serializers.ModelSerializer):
-    author_name = serializers.CharField(source='author.username', read_only=True)
+    author_name = serializers.SerializerMethodField()
+    
+    def get_author_name(self, obj):
+        return obj.author.name or f"{obj.author.first_name} {obj.author.last_name}".strip() or obj.author.username
     author_first_name = serializers.CharField(source='author.first_name', read_only=True)
     
     class Meta:
@@ -71,7 +83,10 @@ class ForumCategorySerializer(serializers.ModelSerializer):
 
 
 class ForumPostSerializer(serializers.ModelSerializer):
-    author_name = serializers.CharField(source='author.username', read_only=True)
+    author_name = serializers.SerializerMethodField()
+    
+    def get_author_name(self, obj):
+        return obj.author.name or f"{obj.author.first_name} {obj.author.last_name}".strip() or obj.author.username
     author_first_name = serializers.CharField(source='author.first_name', read_only=True)
     category = serializers.SlugRelatedField(
         slug_field='slug',
