@@ -115,9 +115,14 @@ class ForumPostSerializer(serializers.ModelSerializer):
         return repr
 
     def to_internal_value(self, data):
-        # Convert tags from comma-separated string to list if necessary
+        # Convert tags from comma-separated string to JSON string if necessary
+        import json
         mutable_data = data.copy() if hasattr(data, 'copy') else data
         tags = mutable_data.get('tags')
         if isinstance(tags, str):
-            mutable_data['tags'] = [tag.strip() for tag in tags.split(',') if tag.strip()]
+            try:
+                json.loads(tags)
+            except ValueError:
+                tags_list = [tag.strip() for tag in tags.split(',') if tag.strip()]
+                mutable_data['tags'] = json.dumps(tags_list)
         return super().to_internal_value(mutable_data)
