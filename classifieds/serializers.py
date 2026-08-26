@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Job, Property, Vehicle, Service, ClassifiedImage, Company, Review
+from .models import Job, Property, Vehicle, Service, ClassifiedImage, Company, Review, JobSeekerProfile
 
 
 class ClassifiedImageSerializer(serializers.ModelSerializer):
@@ -188,3 +188,14 @@ class ReviewSerializer(serializers.ModelSerializer):
         model = Review
         fields = ['id', 'rating', 'comment', 'reviewable_type', 'reviewable_id', 'user', 'user_name', 'status', 'created_at']
         read_only_fields = ['id', 'user', 'user_name', 'status', 'created_at']
+
+
+class JobSeekerProfileSerializer(serializers.ModelSerializer):
+    user_name = serializers.CharField(source='user.username', read_only=True)
+    user_email = serializers.EmailField(source='user.email', read_only=True)
+    user_phone = serializers.CharField(source='user.phone', read_only=True)
+    
+    class Meta:
+        model = JobSeekerProfile
+        fields = '__all__'
+        read_only_fields = ['id', 'user', 'views', 'created_at', 'updated_at']

@@ -2,6 +2,10 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
+    # Job Seekers
+    path('job-seekers/', views.JobSeekerProfileListCreateView.as_view(), name='job-seeker-list'),
+    path('job-seekers/<int:pk>/', views.JobSeekerProfileDetailView.as_view(), name='job-seeker-detail'),
+    
     # Jobs
     path('jobs/', views.JobListCreateView.as_view(), name='job-list'),
     path('jobs/<int:pk>/', views.JobDetailView.as_view(), name='job-detail'),

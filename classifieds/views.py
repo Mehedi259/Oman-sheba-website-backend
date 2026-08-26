@@ -1,8 +1,8 @@
 from rest_framework import generics, filters
 import django_filters
 from django_filters.rest_framework import DjangoFilterBackend
-from .models import Job, Property, Vehicle, Service, ClassifiedImage, Review
-from .serializers import JobSerializer, PropertySerializer, VehicleSerializer, ServiceSerializer, ClassifiedImageSerializer, ReviewSerializer
+from .models import Job, Property, Vehicle, Service, ClassifiedImage, Review, JobSeekerProfile
+from .serializers import JobSerializer, PropertySerializer, VehicleSerializer, ServiceSerializer, ClassifiedImageSerializer, ReviewSerializer, JobSeekerProfileSerializer
 
 
 class JobListCreateView(generics.ListCreateAPIView):
@@ -182,3 +182,28 @@ class ReviewListCreateView(generics.ListCreateAPIView):
                 target.save(update_fields=['rating', 'review_count'])
         except Exception as e:
             print("Failed to update aggregate rating:", e)
+
+
+class JobSeekerProfileListCreateView(generics.ListCreateAPIView):
+    """List all job seekers or create new profile"""
+    queryset = JobSeekerProfile.objects.all()
+    serializer_class = JobSeekerProfileSerializer
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    filterset_fields = ['status', 'education_level']
+    search_fields = ['professional_title', 'summary', 'skills']
+    ordering_fields = ['created_at', 'years_of_experience']
+    
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+
+class JobSeekerProfileDetailView(generics.RetrieveUpdateDestroyAPIView):
+    """Retrieve, update or delete a job seeker profile"""
+    queryset = JobSeekerProfile.objects.all()
+    serializer_class = JobSeekerProfileSerializer
+    
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        instance.views += 1
+        instance.save(update_fields=['views'])
+        return super().retrieve(request, *args, **kwargs)

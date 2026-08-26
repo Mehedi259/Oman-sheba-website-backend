@@ -729,3 +729,67 @@ class ClassifiedImage(models.Model):
     
     def __str__(self):
         return f"{self.content_type} #{self.content_id} - Image"
+
+
+# ==========================================
+# JOB SEEKER PROFILES (BDJobs style)
+# ==========================================
+
+class JobSeekerStatus(models.TextChoices):
+    """Status for job seeker profiles"""
+    ACTIVELY_LOOKING = 'ACTIVELY_LOOKING', _('Actively Looking')
+    HIRED = 'HIRED', _('Hired / Not Looking')
+    HIDDEN = 'HIDDEN', _('Hidden')
+
+
+class JobSeekerProfile(models.Model):
+    """Profile for users looking for jobs"""
+    
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='job_seeker_profile')
+    
+    professional_title = models.CharField(max_length=255)
+    professional_title_bn = models.CharField(max_length=255, blank=True)
+    slug = models.SlugField(max_length=300, unique=True, blank=True)
+    
+    summary = models.TextField(blank=True)
+    summary_bn = models.TextField(blank=True)
+    
+    # Details
+    years_of_experience = models.PositiveIntegerField(default=0)
+    education_level = models.CharField(max_length=100, blank=True)
+    
+    # JSON array for skills ["Plumbing", "Electrical", etc]
+    skills = models.JSONField(default=list, blank=True)
+    
+    expected_salary = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    salary_currency = models.CharField(max_length=10, default='OMR')
+    
+    # Media & Docs
+    profile_picture = models.ImageField(upload_to='job_seekers/pictures/', blank=True, null=True)
+    cv_file = models.FileField(upload_to='job_seekers/cvs/', blank=True, null=True)
+    
+    status = models.CharField(max_length=20, choices=JobSeekerStatus.choices, default=JobSeekerStatus.ACTIVELY_LOOKING)
+    
+    # Tracking
+    views = models.PositiveIntegerField(default=0)
+    featured = models.BooleanField(default=False)
+    
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            base_slug = slugify(self.professional_title)
+            self.slug = f"{base_slug}-{uuid.uuid4().hex[:8]}"
+        super().save(*args, **kwargs)
+        
+    class Meta:
+        ordering = ['-created_at']
+        indexes = [
+            models.Index(fields=['slug']),
+            models.Index(fields=['status']),
+            models.Index(fields=['user']),
+        ]
+        
+    def __str__(self):
+        return f"{self.user.username} - {self.professional_title}"
