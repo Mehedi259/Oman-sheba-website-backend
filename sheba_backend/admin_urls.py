@@ -14,6 +14,10 @@ urlpatterns = [
     path('jobs/', admin_views.AdminJobListView.as_view(), name='admin-job-list'),
     path('jobs/<int:pk>/', admin_views.AdminJobDetailView.as_view(), name='admin-job-detail'),
     
+    # Job Seekers
+    path('job-seekers/', admin_views.AdminJobSeekerListView.as_view(), name='admin-job-seeker-list'),
+    path('job-seekers/<int:pk>/', admin_views.AdminJobSeekerDetailView.as_view(), name='admin-job-seeker-detail'),
+    
     # Posts
     path('posts/', admin_views.AdminPostListView.as_view(), name='admin-post-list'),
     path('posts/<int:pk>/', admin_views.AdminPostDetailView.as_view(), name='admin-post-detail'),

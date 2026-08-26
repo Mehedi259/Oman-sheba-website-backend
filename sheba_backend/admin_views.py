@@ -17,8 +17,8 @@ from emergency.models import EmergencyService
 from emergency.serializers import EmergencyServiceSerializer
 from news.models import Article
 from news.serializers import ArticleSerializer
-from classifieds.models import Property, Vehicle, Service
-from classifieds.serializers import PropertySerializer, VehicleSerializer, ServiceSerializer
+from classifieds.models import Property, Vehicle, Service, JobSeekerProfile
+from classifieds.serializers import PropertySerializer, VehicleSerializer, ServiceSerializer, JobSeekerProfileSerializer
 
 User = get_user_model()
 
@@ -56,6 +56,17 @@ class AdminJobListView(generics.ListCreateAPIView):
 class AdminJobDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Job.objects.all()
     serializer_class = JobSerializer
+    permission_classes = [permissions.IsAdminUser]
+
+# Job Seekers Admin
+class AdminJobSeekerListView(generics.ListCreateAPIView):
+    queryset = JobSeekerProfile.objects.all().order_by('-created_at')
+    serializer_class = JobSeekerProfileSerializer
+    permission_classes = [permissions.IsAdminUser]
+
+class AdminJobSeekerDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = JobSeekerProfile.objects.all()
+    serializer_class = JobSeekerProfileSerializer
     permission_classes = [permissions.IsAdminUser]
 
 # Community Posts Admin
