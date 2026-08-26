@@ -764,9 +764,15 @@ class JobSeekerProfile(models.Model):
     expected_salary = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     salary_currency = models.CharField(max_length=10, default='OMR')
     
+    # Location and Contact
+    phone = models.CharField(max_length=20, blank=True)
+    city = models.CharField(max_length=100, blank=True)
+    area = models.CharField(max_length=100, blank=True)
+    
     # Media & Docs
     profile_picture = models.ImageField(upload_to='job_seekers/pictures/', blank=True, null=True)
     cv_file = models.FileField(upload_to='job_seekers/cvs/', blank=True, null=True)
+    documents = models.JSONField(default=list, blank=True)
     
     status = models.CharField(max_length=20, choices=JobSeekerStatus.choices, default=JobSeekerStatus.ACTIVELY_LOOKING)
     
