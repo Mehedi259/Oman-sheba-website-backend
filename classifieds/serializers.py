@@ -192,10 +192,21 @@ class ReviewSerializer(serializers.ModelSerializer):
 
 class JobSeekerProfileSerializer(serializers.ModelSerializer):
     user_name = serializers.CharField(source='user.username', read_only=True)
+    user_full_name = serializers.CharField(source='user.name', read_only=True)
     user_email = serializers.EmailField(source='user.email', read_only=True)
     user_phone = serializers.CharField(source='user.phone', read_only=True)
+    user_avatar = serializers.SerializerMethodField()
     
     class Meta:
         model = JobSeekerProfile
         fields = '__all__'
         read_only_fields = ['id', 'user', 'views', 'created_at', 'updated_at']
+
+    def get_user_avatar(self, obj):
+        request = self.context.get('request')
+        user = obj.user
+        if user.avatar:
+            return request.build_absolute_uri(user.avatar.url) if request else user.avatar.url
+        elif user.avatar_url:
+            return user.avatar_url
+        return None
