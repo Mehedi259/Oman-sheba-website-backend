@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     'news',
     'community',
     'system',  # New system app for advertisements, analytics, settings
+    'chat',
+    'channels',
 ]
 
 MIDDLEWARE = [
@@ -73,6 +75,16 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'sheba_backend.wsgi.application'
+ASGI_APPLICATION = 'sheba_backend.asgi.application'
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            'hosts': [('127.0.0.1', 6379)],
+        },
+    },
+}
 
 # Database
 # Automatically switches between SQLite (dev) and PostgreSQL (prod)

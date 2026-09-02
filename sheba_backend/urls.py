@@ -122,6 +122,7 @@ urlpatterns = [
     path('api/emergency/', include('emergency.urls')),
     path('api/news/', include('news.urls')),
     path('api/community/', include('community.urls')),
+    path('api/chat/', include('chat.urls')),
     path('api/system/', include('system.urls')),
 ]
 
