@@ -66,14 +66,21 @@ class ClassifiedSerializer(serializers.ModelSerializer):
 
 class ForumCommentSerializer(serializers.ModelSerializer):
     author_name = serializers.SerializerMethodField()
+    author_profile_picture = serializers.SerializerMethodField()
     
     def get_author_name(self, obj):
         return obj.author.name or f"{obj.author.first_name} {obj.author.last_name}".strip() or obj.author.username
+
+    def get_author_profile_picture(self, obj):
+        request = self.context.get('request')
+        if hasattr(obj.author, 'profile_picture') and obj.author.profile_picture:
+            return request.build_absolute_uri(obj.author.profile_picture.url) if request else obj.author.profile_picture.url
+        return None
     author_first_name = serializers.CharField(source='author.first_name', read_only=True)
     
     class Meta:
         model = ForumComment
-        fields = ['id', 'content', 'author', 'author_name', 'author_first_name', 'post', 'parent', 'created_at', 'updated_at']
+        fields = ['id', 'content', 'author', 'author_name', 'author_first_name', 'author_profile_picture', 'post', 'parent', 'created_at', 'updated_at']
         read_only_fields = ['id', 'author', 'post', 'created_at', 'updated_at']
 
 class ForumCategorySerializer(serializers.ModelSerializer):
@@ -84,9 +91,16 @@ class ForumCategorySerializer(serializers.ModelSerializer):
 
 class ForumPostSerializer(serializers.ModelSerializer):
     author_name = serializers.SerializerMethodField()
+    author_profile_picture = serializers.SerializerMethodField()
     
     def get_author_name(self, obj):
         return obj.author.name or f"{obj.author.first_name} {obj.author.last_name}".strip() or obj.author.username
+
+    def get_author_profile_picture(self, obj):
+        request = self.context.get('request')
+        if hasattr(obj.author, 'profile_picture') and obj.author.profile_picture:
+            return request.build_absolute_uri(obj.author.profile_picture.url) if request else obj.author.profile_picture.url
+        return None
     author_first_name = serializers.CharField(source='author.first_name', read_only=True)
     category = serializers.SlugRelatedField(
         slug_field='slug',
