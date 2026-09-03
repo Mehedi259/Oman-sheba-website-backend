@@ -73,8 +73,10 @@ class ForumCommentSerializer(serializers.ModelSerializer):
 
     def get_author_profile_picture(self, obj):
         request = self.context.get('request')
-        if hasattr(obj.author, 'profile_picture') and obj.author.avatar:
+        if hasattr(obj.author, 'avatar') and obj.author.avatar:
             return request.build_absolute_uri(obj.author.avatar.url) if request else obj.author.avatar.url
+        if hasattr(obj.author, 'avatar_url') and obj.author.avatar_url:
+            return obj.author.avatar_url
         return None
     author_first_name = serializers.CharField(source='author.first_name', read_only=True)
     
@@ -98,8 +100,10 @@ class ForumPostSerializer(serializers.ModelSerializer):
 
     def get_author_profile_picture(self, obj):
         request = self.context.get('request')
-        if hasattr(obj.author, 'profile_picture') and obj.author.avatar:
+        if hasattr(obj.author, 'avatar') and obj.author.avatar:
             return request.build_absolute_uri(obj.author.avatar.url) if request else obj.author.avatar.url
+        if hasattr(obj.author, 'avatar_url') and obj.author.avatar_url:
+            return obj.author.avatar_url
         return None
     author_first_name = serializers.CharField(source='author.first_name', read_only=True)
     category = serializers.SlugRelatedField(
