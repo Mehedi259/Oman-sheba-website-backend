@@ -79,11 +79,20 @@ class ForumCommentSerializer(serializers.ModelSerializer):
             return obj.author.avatar_url
         return None
     author_first_name = serializers.CharField(source='author.first_name', read_only=True)
+
+    is_liked_by_user = serializers.SerializerMethodField()
+
+    def get_is_liked_by_user(self, obj):
+        request = self.context.get('request')
+        if request and request.user.is_authenticated:
+            return ForumCommentLike.objects.filter(comment=obj, user=request.user).exists()
+        return False
+
     
     class Meta:
         model = ForumComment
-        fields = ['id', 'content', 'author', 'author_name', 'author_first_name', 'author_profile_picture', 'post', 'parent', 'created_at', 'updated_at']
-        read_only_fields = ['id', 'author', 'post', 'created_at', 'updated_at']
+        fields = ['id', 'content', 'author', 'author_name', 'author_first_name', 'author_profile_picture', 'post', 'parent', 'likes', 'is_liked_by_user', 'created_at', 'updated_at']
+        read_only_fields = ['id', 'author', 'post', 'likes', 'created_at', 'updated_at']
 
 class ForumCategorySerializer(serializers.ModelSerializer):
     class Meta:
@@ -106,6 +115,15 @@ class ForumPostSerializer(serializers.ModelSerializer):
             return obj.author.avatar_url
         return None
     author_first_name = serializers.CharField(source='author.first_name', read_only=True)
+
+    is_liked_by_user = serializers.SerializerMethodField()
+
+    def get_is_liked_by_user(self, obj):
+        request = self.context.get('request')
+        if request and request.user.is_authenticated:
+            return ForumCommentLike.objects.filter(comment=obj, user=request.user).exists()
+        return False
+
     category = serializers.SlugRelatedField(
         slug_field='slug',
         queryset=ForumCategory.objects.all(),

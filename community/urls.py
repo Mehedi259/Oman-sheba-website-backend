@@ -18,5 +18,6 @@ urlpatterns = [
     path('forum/posts/<int:pk>/', views.ForumPostDetailView.as_view(), name='forum-post-detail'),
     path('forum/posts/<int:post_id>/comments/', views.ForumCommentListCreateView.as_view(), name='forum-post-comments'),
     path('forum/comments/<int:pk>/', views.ForumCommentDetailView.as_view(), name='forum-comment-detail'),
+    path('forum/comments/<int:comment_id>/like/', views.ForumCommentLikeView.as_view(), name='forum-comment-like'),
     path('forum/posts/<int:post_id>/like/', views.ForumPostLikeView.as_view(), name='forum-post-like'),
 ]

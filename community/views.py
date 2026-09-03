@@ -1,4 +1,4 @@
-from rest_framework import generics, status
+from rest_framework import generics, status, permissions
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from .models import Post, Comment, Like, Classified, ClassifiedCategory, ForumPost, ForumCategory, ForumComment, ForumLike
@@ -147,3 +147,23 @@ class ForumCommentDetailView(generics.RetrieveUpdateDestroyAPIView):
     """Retrieve, update or delete a forum comment"""
     queryset = ForumComment.objects.all()
     serializer_class = ForumCommentSerializer
+
+
+class ForumCommentLikeView(APIView):
+    """Toggle like for a forum comment"""
+    permission_classes = [permissions.IsAuthenticated]
+    
+    def post(self, request, comment_id):
+        from django.shortcuts import get_object_or_404
+        comment = get_object_or_404(ForumComment, id=comment_id)
+        like, created = ForumCommentLike.objects.get_or_create(comment=comment, user=request.user)
+        
+        if not created:
+            like.delete()
+            comment.likes = max(0, comment.likes - 1)
+            comment.save(update_fields=['likes'])
+            return Response({'status': 'unliked', 'likes': comment.likes})
+            
+        comment.likes += 1
+        comment.save(update_fields=['likes'])
+        return Response({'status': 'liked', 'likes': comment.likes})
