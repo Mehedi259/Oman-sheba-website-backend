@@ -1,7 +1,7 @@
 from rest_framework import generics, status, permissions
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from .models import Post, Comment, Like, Classified, ClassifiedCategory, ForumPost, ForumCategory, ForumComment, ForumLike
+from .models import Post, Comment, Like, Classified, ClassifiedCategory, ForumPost, ForumCategory, ForumComment, ForumLike, ForumCommentLike
 from .serializers import PostSerializer, CommentSerializer, ClassifiedSerializer, ClassifiedCategorySerializer, ForumPostSerializer, ForumCategorySerializer, ForumCommentSerializer
 
 
