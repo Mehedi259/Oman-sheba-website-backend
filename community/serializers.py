@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Post, Comment, Like, Classified, ClassifiedCategory, ForumPost, ForumCategory, ForumComment
+from .models import Post, Comment, Like, Classified, ClassifiedCategory, ForumPost, ForumCategory, ForumComment, ForumCommentLike, ForumLike
 from classifieds.models import ClassifiedImage
 
 
@@ -121,7 +121,7 @@ class ForumPostSerializer(serializers.ModelSerializer):
     def get_is_liked_by_user(self, obj):
         request = self.context.get('request')
         if request and request.user.is_authenticated:
-            return ForumCommentLike.objects.filter(comment=obj, user=request.user).exists()
+            return ForumLike.objects.filter(post=obj, user=request.user).exists()
         return False
 
     category = serializers.SlugRelatedField(
