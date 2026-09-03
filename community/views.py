@@ -142,3 +142,8 @@ class ForumPostLikeView(APIView):
         post.likes += 1
         post.save(update_fields=['likes'])
         return Response({'message': 'Forum post liked', 'likes': post.likes}, status=status.HTTP_200_OK)
+
+class ForumCommentDetailView(generics.RetrieveUpdateDestroyAPIView):
+    """Retrieve, update or delete a forum comment"""
+    queryset = ForumComment.objects.all()
+    serializer_class = ForumCommentSerializer
