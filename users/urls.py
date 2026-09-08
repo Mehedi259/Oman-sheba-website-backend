@@ -10,6 +10,7 @@ urlpatterns = [
     path('change-password/', views.ChangePasswordView.as_view(), name='change-password'),
     path('my-posts/', views.UserMyPostsView.as_view(), name='user-my-posts'),
     path('applications/', views.UserJobApplicationsView.as_view(), name='user-applications'),
+    path('job-applicants/', views.UserJobApplicantsView.as_view(), name='user-job-applicants'),
     path('favorites/', views.FavoriteListCreateView.as_view(), name='favorites-list'),
     path('favorites/<int:pk>/', views.FavoriteDeleteView.as_view(), name='favorite-delete'),
     

@@ -217,3 +217,29 @@ class UserJobApplicationsView(APIView):
             })
         return Response(res)
 
+
+
+class UserJobApplicantsView(APIView):
+    """Retrieve applications submitted to the jobs posted by the current user"""
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        user = request.user
+        apps = JobApplication.objects.filter(job__user=user).select_related('job', 'user')
+        res = []
+        for app in apps:
+            res.append({
+                'id': app.id,
+                'job_id': app.job.id,
+                'job_title': app.job.title_bn or app.job.title,
+                'applicant_id': app.user.id,
+                'applicant_name': app.user.get_full_name() or app.user.username,
+                'applicant_email': app.user.email,
+                'applicant_phone': getattr(app.user, 'phone', ''),
+                'cover_letter': app.cover_letter,
+                'cv_url': app.cv_url.url if app.cv_url else None,
+                'status': app.status,
+                'created_at': app.created_at,
+            })
+        return Response(res)
+
