@@ -166,8 +166,8 @@ class ChangePasswordView(APIView):
         return Response({'message': 'Password updated successfully'}, status=status.HTTP_200_OK)
 
 
-from classifieds.models import Job, Property, Vehicle, Service, JobApplication
-from classifieds.serializers import JobSerializer, PropertySerializer, VehicleSerializer, ServiceSerializer
+from classifieds.models import Job, Property, Vehicle, Service, JobApplication, JobSeekerProfile
+from classifieds.serializers import JobSerializer, PropertySerializer, VehicleSerializer, ServiceSerializer, JobSeekerProfileSerializer
 
 class UserMyPostsView(APIView):
     """Retrieve all posts created by the authenticated user"""
@@ -186,14 +186,16 @@ class UserMyPostsView(APIView):
         properties = PropertySerializer(Property.objects.filter(user_filter).distinct(), many=True, context={'request': request}).data
         vehicles = VehicleSerializer(Vehicle.objects.filter(user_filter).distinct(), many=True, context={'request': request}).data
         services = ServiceSerializer(Service.objects.filter(user_filter).distinct(), many=True, context={'request': request}).data
+        job_seekers = JobSeekerProfileSerializer(JobSeekerProfile.objects.filter(user=user).distinct(), many=True, context={'request': request}).data
         
         # Tag items with category type
         for item in jobs: item['post_type'] = 'job'
         for item in properties: item['post_type'] = 'property'
         for item in vehicles: item['post_type'] = 'vehicle'
         for item in services: item['post_type'] = 'service'
+        for item in job_seekers: item['post_type'] = 'job_seeker'
         
-        all_posts = jobs + properties + vehicles + services
+        all_posts = jobs + properties + vehicles + services + job_seekers
         all_posts.sort(key=lambda x: x.get('created_at', ''), reverse=True)
         return Response(all_posts)
 
