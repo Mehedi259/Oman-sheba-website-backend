@@ -5,7 +5,7 @@ from users.models import User
 class UserChatSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 'first_name', 'last_name', 'name', 'phone', 'avatar']
+        fields = ['id', 'username', 'first_name', 'last_name', 'name', 'phone', 'avatar', 'avatar_url']
 
 class MessageSerializer(serializers.ModelSerializer):
     sender_id = serializers.IntegerField(source='sender.id', read_only=True)
