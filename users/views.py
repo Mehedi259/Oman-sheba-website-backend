@@ -17,7 +17,7 @@ class UserRegistrationView(generics.CreateAPIView):
     permission_classes = [permissions.AllowAny]
 
 
-class UserProfileView(generics.RetrieveUpdateAPIView):
+class UserProfileView(generics.RetrieveUpdateDestroyAPIView):
     """Get and update user profile"""
     serializer_class = UserSerializer
     permission_classes = [permissions.IsAuthenticated]
