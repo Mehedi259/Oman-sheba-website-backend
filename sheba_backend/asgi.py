@@ -20,3 +20,6 @@ application = ProtocolTypeRouter({
         )
     ),
 })
+
+from sheba_backend.firebase_utils import initialize_firebase
+initialize_firebase()

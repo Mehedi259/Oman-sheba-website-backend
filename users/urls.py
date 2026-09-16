@@ -24,4 +24,5 @@ urlpatterns = [
     path('auth/token/', TokenObtainPairView.as_view(), name='token-obtain-pair'),
     path('auth/token/refresh/', TokenRefreshView.as_view(), name='token-refresh'),
     path('auth/me/', views.CurrentUserView.as_view(), name='current-user'),
+    path('update-fcm-token/', views.UpdateFCMTokenView.as_view(), name='update-fcm-token'),
 ]

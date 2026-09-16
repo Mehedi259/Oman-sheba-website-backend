@@ -48,6 +48,10 @@ class User(AbstractUser):
     auth_provider = models.CharField(max_length=20, default='email', 
                                       choices=[('email', 'Email'), ('google', 'Google')],
                                       help_text='How the user registered')
+    
+    # Push Notifications
+    fcm_token = models.CharField(max_length=255, blank=True, null=True, 
+                                  help_text='Firebase Cloud Messaging token for push notifications')
     avatar_url = models.URLField(max_length=500, blank=True, 
                                   help_text='Profile picture URL from OAuth provider')
     

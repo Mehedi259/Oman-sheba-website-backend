@@ -1,3 +1,4 @@
+from sheba_backend.firebase_utils import send_push_notification
 import json
 from channels.generic.websocket import AsyncWebsocketConsumer
 from channels.db import database_sync_to_async
@@ -82,4 +83,15 @@ class ChatConsumer(AsyncWebsocketConsumer):
         conv = Conversation.objects.get(id=conversation_id)
         msg = Message.objects.create(conversation=conv, sender=sender, text=text)
         conv.save() # Trigger updated_at
+        
+        # Send push notification to other participants
+        for participant in conv.participants.exclude(id=sender.id):
+            title = f"New message from {sender.get_full_name() or sender.username}"
+            body = text[:100] + ('...' if len(text) > 100 else '')
+            data = {
+                'type': 'chat',
+                'conversation_id': str(conv.id)
+            }
+            send_push_notification(participant, title, body, data)
+            
         return msg

@@ -9,3 +9,6 @@ from django.core.wsgi import get_wsgi_application
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'sheba_backend.settings')
 
 application = get_wsgi_application()
+
+from sheba_backend.firebase_utils import initialize_firebase
+initialize_firebase()

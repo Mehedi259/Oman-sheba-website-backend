@@ -245,3 +245,15 @@ class UserJobApplicantsView(APIView):
             })
         return Response(res)
 
+
+class UpdateFCMTokenView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request):
+        token = request.data.get('token')
+        if not token:
+            return Response({'error': 'Token is required'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        request.user.fcm_token = token
+        request.user.save()
+        return Response({'message': 'Token updated successfully'})
