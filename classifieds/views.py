@@ -1,4 +1,5 @@
 from rest_framework import generics, filters
+from system.filters import CountryFilterBackend
 import django_filters
 from django_filters.rest_framework import DjangoFilterBackend
 from .models import Job, Property, Vehicle, Service, ClassifiedImage, Review, JobSeekerProfile
@@ -9,7 +10,7 @@ class JobListCreateView(generics.ListCreateAPIView):
     """List all jobs or create new job"""
     queryset = Job.objects.filter(status='PUBLISHED')
     serializer_class = JobSerializer
-    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    filter_backends = [CountryFilterBackend, DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     filterset_fields = ['type', 'category', 'city']
     search_fields = ['title', 'description']
     ordering_fields = ['created_at', 'price', 'views']
@@ -65,7 +66,7 @@ class PropertyListCreateView(generics.ListCreateAPIView):
     """List all properties or create new property"""
     queryset = Property.objects.filter(status='PUBLISHED')
     serializer_class = PropertySerializer
-    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    filter_backends = [CountryFilterBackend, DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     filterset_fields = ['type', 'purpose', 'city', 'bedrooms']
     search_fields = ['title', 'description', 'city']
     ordering_fields = ['created_at', 'price', 'views']
@@ -90,7 +91,7 @@ class VehicleListCreateView(generics.ListCreateAPIView):
     """List all vehicles or create new vehicle"""
     queryset = Vehicle.objects.filter(status='PUBLISHED')
     serializer_class = VehicleSerializer
-    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    filter_backends = [CountryFilterBackend, DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     filterset_fields = ['make', 'condition', 'city', 'year']
     search_fields = ['title', 'description', 'make', 'model']
     ordering_fields = ['created_at', 'price', 'views', 'year']
@@ -122,7 +123,7 @@ class ServiceFilter(django_filters.FilterSet):
 class ServiceListCreateView(generics.ListCreateAPIView):
     queryset = Service.objects.filter(status='PUBLISHED')
     serializer_class = ServiceSerializer
-    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    filter_backends = [CountryFilterBackend, DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     filterset_class = ServiceFilter
     search_fields = ['title', 'description', 'category', 'service_type']
     ordering_fields = ['created_at', 'price', 'views']
@@ -147,7 +148,7 @@ class ClassifiedImageListCreateView(generics.ListCreateAPIView):
     """Upload and list classified images"""
     queryset = ClassifiedImage.objects.all()
     serializer_class = ClassifiedImageSerializer
-    filter_backends = [DjangoFilterBackend]
+    filter_backends = [CountryFilterBackend, DjangoFilterBackend]
     filterset_fields = ['content_type', 'content_id']
 
 
@@ -155,7 +156,7 @@ class ReviewListCreateView(generics.ListCreateAPIView):
     """Submit and list reviews for classifieds"""
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
-    filter_backends = [DjangoFilterBackend]
+    filter_backends = [CountryFilterBackend, DjangoFilterBackend]
     filterset_fields = ['reviewable_type', 'reviewable_id']
 
     def perform_create(self, serializer):
@@ -188,7 +189,7 @@ class JobSeekerProfileListCreateView(generics.ListCreateAPIView):
     """List all job seekers or create new profile"""
     queryset = JobSeekerProfile.objects.all()
     serializer_class = JobSeekerProfileSerializer
-    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    filter_backends = [CountryFilterBackend, DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     filterset_fields = ['status', 'education_level']
     search_fields = ['professional_title', 'summary', 'skills']
     ordering_fields = ['created_at', 'years_of_experience']

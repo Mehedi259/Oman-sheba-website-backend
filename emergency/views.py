@@ -1,4 +1,5 @@
 from rest_framework import generics, filters
+from system.filters import CountryFilterBackend
 from django_filters.rest_framework import DjangoFilterBackend
 from .models import EmergencyService, EmergencyContact
 from .serializers import EmergencyServiceSerializer, EmergencyContactSerializer
@@ -8,7 +9,7 @@ class EmergencyServiceListView(generics.ListAPIView):
     """List all emergency services"""
     queryset = EmergencyService.objects.filter(is_active=True)
     serializer_class = EmergencyServiceSerializer
-    filter_backends = [DjangoFilterBackend, filters.SearchFilter]
+    filter_backends = [CountryFilterBackend, DjangoFilterBackend, filters.SearchFilter]
     filterset_fields = ['service_type', 'location', 'is_24_7']
     search_fields = ['name', 'description', 'address']
 

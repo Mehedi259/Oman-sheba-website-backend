@@ -3,6 +3,12 @@ from django.conf import settings
 from django.utils.translation import gettext_lazy as _
 
 
+COUNTRY_CHOICES = [
+    ('oman', 'Oman'),
+    ('saudi', 'Saudi Arabia'),
+]
+
+
 class EmergencyService(models.Model):
     """Emergency service providers"""
     
@@ -26,8 +32,9 @@ class EmergencyService(models.Model):
     description = models.TextField(blank=True)
     description_bn = models.TextField(blank=True, verbose_name='Bengali Description')
     
-    order = models.IntegerField(default=0)
     is_active = models.BooleanField(default=True)
+    order = models.IntegerField(default=0)
+    country = models.CharField(max_length=10, choices=COUNTRY_CHOICES, default='oman')
     
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -53,6 +60,7 @@ class EmergencyContact(models.Model):
     alternative_phone = models.CharField(max_length=20, blank=True)
     address = models.TextField(blank=True)
     notes = models.TextField(blank=True)
+    country = models.CharField(max_length=10, choices=COUNTRY_CHOICES, default='oman')
     
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

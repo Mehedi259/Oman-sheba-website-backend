@@ -13,6 +13,12 @@ class PostStatus(models.TextChoices):
     DELETED = 'DELETED', _('Deleted')
 
 
+COUNTRY_CHOICES = (
+    ('oman', 'Oman'),
+    ('saudi', 'Saudi Arabia'),
+)
+
+
 # ==========================================
 # COMMUNITY FORUM MODELS
 # ==========================================
@@ -62,13 +68,12 @@ class ForumPost(models.Model):
     # Image (optional)
     image = models.ImageField(upload_to='forum_posts/', null=True, blank=True)
     
-    # Status
+    # Status & Visibility
     status = models.CharField(max_length=20, choices=PostStatus.choices, default=PostStatus.PUBLISHED)
     pinned = models.BooleanField(default=False)
     locked = models.BooleanField(default=False)
-    
-    # Statistics
     views = models.PositiveIntegerField(default=0)
+    country = models.CharField(max_length=10, choices=COUNTRY_CHOICES, default='oman')
     likes = models.PositiveIntegerField(default=0)
     
     created_at = models.DateTimeField(auto_now_add=True)
@@ -291,6 +296,8 @@ class Classified(models.Model):
     featured = models.BooleanField(default=False)
     sold = models.BooleanField(default=False)
     views = models.PositiveIntegerField(default=0)
+    country = models.CharField(max_length=10, choices=COUNTRY_CHOICES, default='oman')
+
     
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

@@ -22,6 +22,12 @@ class PostStatus(models.TextChoices):
     DELETED = 'DELETED', _('Deleted')
 
 
+COUNTRY_CHOICES = (
+    ('oman', 'Oman'),
+    ('saudi', 'Saudi Arabia'),
+)
+
+
 class ArticleCategory(models.Model):
     """Article/News categories"""
     
@@ -82,6 +88,7 @@ class Article(models.Model):
     status = models.CharField(max_length=20, choices=PostStatus.choices, default=PostStatus.DRAFT)
     featured = models.BooleanField(default=False)
     views = models.PositiveIntegerField(default=0)
+    country = models.CharField(max_length=10, choices=COUNTRY_CHOICES, default='oman')
     
     # Source (for news)
     source = models.CharField(max_length=255, blank=True)
@@ -134,6 +141,7 @@ class News(models.Model):
     is_published = models.BooleanField(default=False)
     is_featured = models.BooleanField(default=False)
     views = models.PositiveIntegerField(default=0)
+    country = models.CharField(max_length=10, choices=COUNTRY_CHOICES, default='oman')
     
     published_at = models.DateTimeField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)

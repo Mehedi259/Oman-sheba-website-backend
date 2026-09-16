@@ -22,6 +22,12 @@ class AdStatus(models.TextChoices):
     EXPIRED = 'EXPIRED', _('Expired')
 
 
+COUNTRY_CHOICES = (
+    ('oman', 'Oman'),
+    ('saudi', 'Saudi Arabia'),
+)
+
+
 class Advertisement(models.Model):
     """Advertisement management"""
     
@@ -41,6 +47,7 @@ class Advertisement(models.Model):
     
     # Status
     status = models.CharField(max_length=20, choices=AdStatus.choices, default=AdStatus.PENDING)
+    country = models.CharField(max_length=10, choices=COUNTRY_CHOICES, default='oman')
     
     # Statistics
     impressions = models.PositiveIntegerField(default=0)
@@ -177,6 +184,7 @@ class HeroSlider(models.Model):
     )
     order = models.IntegerField(default=0, help_text='ক্রম (ছোট সংখ্যা আগে দেখাবে)')
     is_active = models.BooleanField(default=True, help_text='অ্যাক্টিভ/ডিঅ্যাক্টিভ')
+    country = models.CharField(max_length=10, choices=COUNTRY_CHOICES, default='oman')
     
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

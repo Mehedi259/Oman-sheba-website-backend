@@ -1,4 +1,5 @@
 from rest_framework import generics, filters
+from system.filters import CountryFilterBackend
 from django_filters.rest_framework import DjangoFilterBackend
 from .models import News, NewsComment, Article
 from .serializers import NewsSerializer, NewsCommentSerializer, ArticleSerializer
@@ -8,7 +9,7 @@ class NewsListView(generics.ListAPIView):
     """List all published news"""
     queryset = News.objects.filter(is_published=True)
     serializer_class = NewsSerializer
-    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    filter_backends = [CountryFilterBackend, DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     filterset_fields = ['category', 'is_featured']
     search_fields = ['title', 'content', 'excerpt']
     ordering_fields = ['published_at', 'views']
@@ -45,7 +46,7 @@ class ArticleListView(generics.ListAPIView):
     """List all published articles"""
     queryset = Article.objects.filter(status='PUBLISHED')
     serializer_class = ArticleSerializer
-    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    filter_backends = [CountryFilterBackend, DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     filterset_fields = ['type', 'category', 'featured']
     search_fields = ['title', 'title_bn', 'content', 'content_bn']
     ordering_fields = ['published_at', 'views']

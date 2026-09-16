@@ -1,4 +1,5 @@
 from rest_framework import generics, status, permissions
+from system.filters import CountryFilterBackend
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from .models import Post, Comment, Like, Classified, ClassifiedCategory, ForumPost, ForumCategory, ForumComment, ForumLike, ForumCommentLike
@@ -62,7 +63,7 @@ class ClassifiedListCreateView(generics.ListCreateAPIView):
     """List and create classified ads"""
     queryset = Classified.objects.all()
     serializer_class = ClassifiedSerializer
-    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    filter_backends = [CountryFilterBackend, DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     filterset_fields = ['category', 'condition', 'price_negotiable']
     search_fields = ['title', 'title_bn', 'description', 'description_bn']
     ordering_fields = ['price', 'created_at']
@@ -87,7 +88,7 @@ class ForumPostListCreateView(generics.ListCreateAPIView):
     """List and create forum posts"""
     queryset = ForumPost.objects.all()
     serializer_class = ForumPostSerializer
-    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    filter_backends = [CountryFilterBackend, DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     filterset_fields = ['category', 'author']
     search_fields = ['title', 'content', 'tags']
     ordering_fields = ['created_at', 'views', 'likes', 'pinned']

@@ -14,6 +14,12 @@ class ListingStatus(models.TextChoices):
     REMOVED = 'REMOVED', _('Removed')
 
 
+COUNTRY_CHOICES = (
+    ('oman', 'Oman'),
+    ('saudi', 'Saudi Arabia'),
+)
+
+
 class BaseClassified(models.Model):
     """Base model for all classified listings"""
     
@@ -43,6 +49,7 @@ class BaseClassified(models.Model):
     featured = models.BooleanField(default=False)
     verified = models.BooleanField(default=False)
     views = models.PositiveIntegerField(default=0)
+    country = models.CharField(max_length=10, choices=COUNTRY_CHOICES, default='oman')
     
     # Rating & Reviews
     rating = models.FloatField(default=0.0)
