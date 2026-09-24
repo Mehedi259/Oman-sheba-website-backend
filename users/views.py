@@ -140,6 +140,8 @@ class NotificationListView(generics.ListAPIView):
     def get_queryset(self):
         return Notification.objects.filter(user=self.request.user)
 
+from django.utils import timezone
+
 class NotificationUpdateView(generics.UpdateAPIView):
     """Update a notification (e.g. mark as read)"""
     serializer_class = NotificationSerializer
@@ -147,6 +149,15 @@ class NotificationUpdateView(generics.UpdateAPIView):
     
     def get_queryset(self):
         return Notification.objects.filter(user=self.request.user)
+
+    def put(self, request, *args, **kwargs):
+        return self.partial_update(request, *args, **kwargs)
+
+    def perform_update(self, serializer):
+        if serializer.validated_data.get('read', False):
+            serializer.save(read_at=timezone.now())
+        else:
+            serializer.save()
 
 
 from .serializers import ChangePasswordSerializer

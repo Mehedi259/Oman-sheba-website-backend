@@ -18,6 +18,7 @@ FILES=(
     "news/migrations/0002_article_country_news_country.py"
     "system/models.py"
     "system/views.py"
+    "system/serializers.py"
     "system/migrations/0003_advertisement_country_heroslider_country.py"
     "system/filters.py"
 )

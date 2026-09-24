@@ -3,7 +3,6 @@ from .models import HeroSlider
 
 
 class HeroSliderSerializer(serializers.ModelSerializer):
-    image = serializers.SerializerMethodField()
     
     class Meta:
         model = HeroSlider
@@ -13,8 +12,3 @@ class HeroSliderSerializer(serializers.ModelSerializer):
             'overlay_gradient', 'order', 'is_active',
             'created_at', 'updated_at'
         ]
-    
-    def get_image(self, obj):
-        if obj.image:
-            return obj.image.url
-        return None
