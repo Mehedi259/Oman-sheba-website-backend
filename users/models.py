@@ -95,6 +95,8 @@ class Favorite(models.Model):
         ('service_provider', 'Service Provider'),
         ('news', 'News'),
         ('article', 'Article'),
+        ('market', 'Market'),
+        ('classified', 'Classified'),
     ]
     
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='favorites')

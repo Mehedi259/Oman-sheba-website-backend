@@ -76,32 +76,49 @@ class FavoriteSerializer(serializers.ModelSerializer):
     def get_item_details(self, obj):
         try:
             item = None
-            icon = ''
+            icon = '❤️'
+            image = None
             if obj.favorite_type == 'job':
+                from classifieds.models import Job
                 item = Job.objects.get(id=obj.favorite_id)
                 icon = '💼'
+                if hasattr(item, 'images') and item.images and len(item.images) > 0:
+                    image = item.images[0]
             elif obj.favorite_type == 'property':
+                from classifieds.models import Property
                 item = Property.objects.get(id=obj.favorite_id)
                 icon = '🏠'
+                if hasattr(item, 'images') and item.images and len(item.images) > 0:
+                    image = item.images[0]
             elif obj.favorite_type == 'vehicle':
+                from classifieds.models import Vehicle
                 item = Vehicle.objects.get(id=obj.favorite_id)
                 icon = '🚗'
+                if hasattr(item, 'images') and item.images and len(item.images) > 0:
+                    image = item.images[0]
             elif obj.favorite_type == 'service':
+                from classifieds.models import Service
                 item = Service.objects.get(id=obj.favorite_id)
                 icon = '🛠️'
-            elif obj.favorite_type == 'classified':
-                item = CommunityClassified.objects.get(id=obj.favorite_id)
+                if hasattr(item, 'images') and item.images and len(item.images) > 0:
+                    image = item.images[0]
+            elif obj.favorite_type in ['classified', 'market', 'marketitem']:
+                from community.models import Classified
+                item = Classified.objects.get(id=obj.favorite_id)
                 icon = '🛒'
+                if hasattr(item, 'images') and item.images and len(item.images) > 0:
+                    image = item.images[0]
                 
             if item:
                 return {
                     'title': item.title,
-                    'title_bn': getattr(item, 'title_bn', ''),
+                    'title_bn': getattr(item, 'title_bn', '') or item.title,
                     'description': item.description[:100] + '...' if item.description else '',
-                    'location': item.city,
+                    'location': getattr(item, 'city', '') or '',
                     'price': str(item.price) if getattr(item, 'price', None) else '',
                     'icon': icon,
-                    'status': item.status
+                    'image': image,
+                    'status': getattr(item, 'status', 'PUBLISHED')
                 }
         except Exception:
             pass
